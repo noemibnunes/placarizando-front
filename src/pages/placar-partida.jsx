@@ -37,7 +37,7 @@ export default function PlacarPartida() {
   };
 
   return (
-    <main>
+    <main className='partida'>
       <div className="time azul" onClick={handleBlueClick}>
         <button
           onClick={(e) => {

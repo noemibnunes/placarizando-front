@@ -11,15 +11,14 @@
   align-items: center;
 }
 
-img {
+.home-content img {
   padding: 12px;
-  width: 60vh;  
-  max-width: 200px;
+  width: 65vh;  
 }
 
 .home button {
   justify-self: center;
-  width: 20vh;
+  width: 30vh;
   padding: 1.5vh;
   font-size: 2.5vh;
   letter-spacing: 0.2vh;
