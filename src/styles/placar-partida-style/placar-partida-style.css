@@ -1,0 +1,59 @@
+main {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.time {
+  flex: 1;
+  height: 60vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin: 0 12px 0 12px;
+  cursor: pointer;
+}
+
+.azul {
+  background-color: #3b82f6; /* azul */
+  color: white;
+}
+
+.vermelho {
+  background-color: #ef4444; /* vermelho */
+  color: white;
+}
+
+.pontuacao {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pontuacao span {
+  font-size: 2.5rem;
+}
+
+.azul button,
+.vermelho button {
+  background: #fca914;
+  color: #151f29;
+  width: 8vh;
+  height: 8vh;
+  border-radius: 100%;
+  font-weight: bold;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.divider {
+  width: 6px;
+  height: 400px;
+  background-color: #4b5563;
+  border-radius: 10px;
+  margin: 0 16px;
+}

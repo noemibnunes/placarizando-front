@@ -1,0 +1,27 @@
+.home {
+  height: 100vh; /* ocupa a tela inteira */
+  display: grid;
+  place-items: center; 
+}
+
+.home-content {
+  display: grid;
+  grid-template-rows: 1fr auto; 
+  gap: 1rem; 
+  align-items: center;
+}
+
+img {
+  padding: 12px;
+  width: 60vh;  
+  max-width: 200px;
+}
+
+.home button {
+  justify-self: center;
+  width: 20vh;
+  padding: 1.5vh;
+  font-size: 2.5vh;
+  letter-spacing: 0.2vh;
+  font-weight: bolder;
+}
