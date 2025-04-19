@@ -13,13 +13,17 @@ export default function Home() {
     navigate('/placar-partida');
   };
 
+  const navigateCriarJogador = () => {
+    navigate('/criar-jogador');
+  };
+
   return (
     <main className="home">
       <div className="home-content">
         <img src={logo} alt="Logo do jogo" />
         <button onClick={navigateIniciarPartida}>iniciar partida</button>
         <button onClick={navigateCriarTime}>criar time</button>
-        <button>criar jogadores</button>
+        <button onClick={navigateCriarJogador}>criar jogadores</button>
       </div>
     </main>
   );

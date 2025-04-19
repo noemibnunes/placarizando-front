@@ -4,6 +4,7 @@ import Home from './pages/home';
 import PlacarPartida from './pages/placar-partida';
 import './styles/index.css';
 import CriarTime from './pages/criar-time';
+import CriarJogador from './pages/criar-jogador';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/criar-time" element={<CriarTime />} />
         <Route path="/placar-partida" element={<PlacarPartida />} />
+        <Route path="/criar-jogador" element={<CriarJogador />} />
       </Routes>
     </BrowserRouter>
   );
