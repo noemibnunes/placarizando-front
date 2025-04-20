@@ -1,0 +1,26 @@
+body {
+  background-color: #162029;
+  color: #fff;
+}
+
+button {
+  background: #FCA914; 
+  border-radius: 5px;
+  color: #151F29;
+}
+
+input {
+  width: 30vh;
+  height: 6vh;
+  background-color: #162E46;
+  color: #ffffff;
+  padding: 1vh;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  outline: none;
+}
+
+form span {
+  margin-bottom: 3vh;
+}
