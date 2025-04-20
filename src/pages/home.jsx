@@ -5,25 +5,16 @@ import { useNavigate } from 'react-router-dom';
 export default function Home() {
   const navigate = useNavigate();
 
-  const navigateCriarTime = () => {
-    navigate('/criar-time');
-  };
-
   const navigateIniciarPartida = () => {
     navigate('/placar-partida');
-  };
-
-  const navigateCriarJogador = () => {
-    navigate('/criar-jogador');
   };
 
   return (
     <main className="home">
       <div className="home-content">
         <img src={logo} alt="Logo do jogo" />
-        <button onClick={navigateIniciarPartida}>iniciar partida</button>
-        <button onClick={navigateCriarTime}>criar time</button>
-        <button onClick={navigateCriarJogador}>criar jogadores</button>
+        <button onClick={navigateIniciarPartida} className="electrolize-regular">Modo Partida</button>
+        <button className="electrolize-regular">Modo Campeonato</button>
       </div>
     </main>
   );
