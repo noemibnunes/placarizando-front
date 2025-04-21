@@ -5,28 +5,47 @@
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  font-family: "Outfit", sans-serif;
+  gap: 6vh;
 }
 
 .titulo-container {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 2.5vh;
-  padding-left: 10vw; 
-  margin-bottom: 4vh;
+  width: 100%;
+  position: relative;
+  padding: 0 16px;
 }
 
-.titulo-container img {
-  width: 10vh; 
-  margin-bottom: 1vh;
+.titulo-container h1 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logo-placar {
+  display: flex;
+  align-items: center;   
+  gap: 1vh;
+}
+
+.logo-placar img {
+  width: 12vh;
+  margin-left: 12px;
+}
+
+.logo-placar span,
+.titulo-container h1 {
+  font-family: "Electrolize", sans-serif; 
+  font-size: 4vh;
+  padding: 12px 0 0 12px;
 }
 
 .placares {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6vh;
   width: 100%;
 }
 
@@ -82,12 +101,6 @@
   margin: 0 16px;
 }
 
-button.electrolize-regular {
-  padding: 12px 24px;
-  font-size: 1.4rem;
-  cursor: pointer;
-  margin: 20px;
-} 
 
 @media (max-width: 450px) {
   .placares {

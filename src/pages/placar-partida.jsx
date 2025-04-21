@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/placar-partida-style/placar-partida-style.css';
-import logoPlacar from "../assets/placar.svg";
+import logoPlacar from '../assets/placar.svg';
 
 export default function PlacarPartida() {
   // Definindo o estado para cada contador
@@ -38,10 +38,13 @@ export default function PlacarPartida() {
   };
 
   return (
-    <main className='partida'>
+    <main className="partida">
       <div className="titulo-container">
-        <img src={logoPlacar} alt="Logo do placar" />
-        <h2 className="electrolize-regular">Modo Partida</h2>
+        <div className="logo-placar">
+          <img src={logoPlacar} alt="Logo do placar" />
+          <span>Modo Partida</span>
+        </div>
+        <h1>SET</h1>
       </div>
 
       <div className="placares">
@@ -77,7 +80,7 @@ export default function PlacarPartida() {
           </button>
         </div>
       </div>
-      <button className="electrolize-regular">Finalizar Set</button>
+      <button>Finalizar Set</button>
     </main>
   );
 }

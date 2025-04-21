@@ -1,0 +1,79 @@
+.torneio {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;     
+  gap: 3vh;              
+}
+
+.cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Adicionado para centralizar o cabeçalho */
+  gap: 1vh;
+  margin-bottom: 3vh;
+}
+
+.cabecalho img {
+  width: 12vh;
+}
+
+.cabecalho span {
+  font-size: 4vh;
+  padding: 12px 0 0 12px;
+}
+
+.torneio h4 {
+  width: 90%;
+  font-size: 3vh;
+  text-align: center;
+  font-weight: 400;
+}
+
+.codigoUnico {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  justify-content: center;
+  gap: 1vh;
+}
+
+.codigoUnico span {
+  width: 30vh;
+  height: 6vh;
+  background-color: #162E46;
+  border-radius: 5px;
+  color: #fff;
+  text-align: center;
+  font-size: 3vh;
+  font-weight: 600;
+  padding: 0 2vh;
+  cursor: pointer;  
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  border: 2px solid #fca914;
+}
+
+.codigoUnico svg {
+  width: 3vh;
+  height: 3vh;
+  cursor: pointer;
+}
+
+.proximo {
+  display: flex;
+  align-items: center; /* Alinhando a seta com o texto */
+  justify-content: center;
+}
+
+.proximo svg {
+  width: 4vh;
+  height: 4vh;
+}
+
+.ativo {
+  font-size: 2vh;
+  color: green;
+}

@@ -31,16 +31,6 @@ input:focus {
   box-shadow: 0 0 0 2px #FCA914;
 }
 
-.content button {
-  justify-self: center;
-  width: 30vh;
-  padding: 1.5vh;
-  font-size: 2vh;
-  letter-spacing: 0.2vh;
-  font-weight: bolder;
-  margin-top: 3vh;
-}
-
 .cores {
   display: flex;
   justify-content: space-between;
