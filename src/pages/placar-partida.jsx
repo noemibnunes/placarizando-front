@@ -1,128 +1,122 @@
-import React, { useState } from "react";
-import "../styles/placar-partida-style/placar-partida-style.css";
-import logoPlacar from "../assets/placar.svg";
+import React, { useState } from 'react';
+import '../styles/placar-partida-style/placar-partida-style.css';
+import logoPlacar from '../assets/placar.svg';
 
 export default function PlacarPartida() {
-  // Definindo o estado para cada contador
-  const [blueCount, setBlueCount] = useState(0);
-  const [redCount, setRedCount] = useState(0);
+  const [leftTeamCount, setLeftTeamCount] = useState(0);
+  const [rightTeamCount, setRightTeamCount] = useState(0);
 
-  // set
-  const [blueSetCount, setBlueSetCount] = useState(0);
-  const [redSetCount, setRedSetCount] = useState(0);
+  const [sets, setSets] = useState([]);
 
-  // set - pontuacao
-  const [blueSetScores, setBlueSetScores] = useState([]);
-  const [redSetScores, setRedSetScores] = useState([]);
-
-  // Função para aumentar o contador da div azul
-  const handleBlueClick = () => {
-    setBlueCount(blueCount + 1);
-  };
-
-  // Função para aumentar o contador da div vermelha
-  const handleRedClick = () => {
-    setRedCount(redCount + 1);
-  };
-
-  // Função para reiniciar os contadores
-  // const resetCounters = () => {
-  //   setBlueCount(0);
-  //   setRedCount(0);
-  // };
-
-  // Função para diminuir o contador da div azul
-  const decreaseBlueCount = () => {
-    if (blueCount > 0) {
-      setBlueCount(blueCount - 1);
-    }
-  };
-
-  // Função para diminuir o contador da div vermelha
-  const decreaseRedCount = () => {
-    if (redCount > 0) {
-      setRedCount(redCount - 1);
-    }
-  };
-
-  // Finalizar o set
   const finalizarSet = () => {
-    if (blueCount > redCount) {
-      setBlueSetCount(blueSetCount + 1);
-      setBlueSetScores([...blueSetScores, blueCount]);
-    } else if (redCount > blueCount) {
-      setRedSetCount(redSetCount + 1);
-      setRedSetScores([...redSetScores, redCount]);
-    }
-    setBlueCount(0);
-    setRedCount(0);
+    const novoSet = {
+      numero: sets.length + 1,
+      leftScore: leftTeamCount,
+      rightScore: rightTeamCount,
+      vencedor: leftTeamCount > rightTeamCount ? 'left' : 'right',
+    };
+
+    setSets([...sets, novoSet]);
+    setLeftTeamCount(0);
+    setRightTeamCount(0);
+  };
+
+  const handleLeftTeamClick = () => setLeftTeamCount(leftTeamCount + 1);
+  const handleRightTeamClick = () => setRightTeamCount(rightTeamCount + 1);
+
+  const decreaseLeftTeamCount = () => {
+    if (leftTeamCount > 0) setLeftTeamCount(leftTeamCount - 1);
+  };
+
+  const decreaseRightTeamCount = () => {
+    if (rightTeamCount > 0) setRightTeamCount(rightTeamCount - 1);
   };
 
   return (
-    <main className="partida">
-      <div className="titulo-container">
-        <div className="logo-placar">
-          <img src={logoPlacar} alt="Logo do placar" />
-          <span>Modo Partida</span>
+    <main className="partida-content">
+      <div className="partida-logo">
+        <div className="logo-left">
+          <img src={logoPlacar} alt="logo" />
+          <span>modo partida</span>
         </div>
+        <h4>SET</h4>
+        <div className="placeholder" />
       </div>
 
-      <div className="set-info">
-        <h1>SET</h1>
-        <div className="set-contadores-completo">
-          <div className="set-lateral">
-            <span className="set-count azul">{blueSetCount}</span>
-            <ul className="score-list">
-              {blueSetScores.map((score, index) => (
-                <li key={index}>{score}</li>
+      <div className="placar">
+        <div className="placar1">
+          <div>
+            <ul className="pontuacao">
+              {sets.map((set) => (
+                <li
+                  key={set.numero}
+                  style={{
+                    backgroundColor:
+                      set.vencedor === 'left' ? 'green' : '#ef4444',
+                  }}
+                >
+                  <span>{set.numero + 'ºset'}</span>
+                  <h3>{set.leftScore}</h3>
+                </li>
               ))}
             </ul>
+            <div
+              className="contar-pontos"
+              style={{ backgroundColor: '#3b82f6' }}
+              onClick={handleLeftTeamClick}
+            >
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  decreaseLeftTeamCount();
+                }}
+                className="botao-flutuante"
+              >
+                &#x2212;
+              </button>
+              <span>{leftTeamCount}</span>
+            </div>
           </div>
+        </div>
 
-          <div className="set-lateral">
-            <span className="set-count vermelho">{redSetCount}</span>
-            <ul className="score-list">
-              {redSetScores.map((score, index) => (
-                <li key={index}>{score}</li>
+        <div className="divisao"></div>
+
+        <div className="placar2">
+          <div>
+            <ul className="pontuacao">
+              {sets.map((set) => (
+                <li
+                  key={set.numero}
+                  style={{
+                    backgroundColor:
+                      set.vencedor === 'right' ? 'green' : '#ef4444',
+                  }}
+                >
+                  <span>{set.numero + 'ºset'}</span>
+                  <h3>{set.rightScore}</h3>
+                </li>
               ))}
             </ul>
+            <div
+              className="contar-pontos"
+              style={{ backgroundColor: '#8b5cf6' }}
+              onClick={handleRightTeamClick}
+            >
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  decreaseRightTeamCount();
+                }}
+                className="botao-flutuante"
+              >
+                &#x2212;
+              </button>
+              <span>{rightTeamCount}</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="placares">
-        <div className="time azul" onClick={handleBlueClick}>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              decreaseBlueCount();
-            }}
-          >
-            &#x2212;
-          </button>
-          <div className="pontuacao">
-            <span>{blueCount}</span>
-          </div>
-        </div>
-
-        <div className="divider" />
-
-        {/* onClick={resetCounters}  */}
-
-        <div className="time vermelho" onClick={handleRedClick}>
-          <div className="pontuacao">
-            <span>{redCount}</span>
-          </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              decreaseRedCount();
-            }}
-          >
-            &#x2212;
-          </button>
-        </div>
-      </div>
       <button onClick={finalizarSet}>Finalizar Set</button>
     </main>
   );
