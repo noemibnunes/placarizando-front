@@ -2,9 +2,11 @@ import '../styles/torneio-style/torneio.css';
 import placar from '../assets/placar.svg';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useTorneio } from '../context/torneioContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function CriarTorneio() {
-  const [codigoUnico, setCodigoUnico] = useState(null);
+  const { codigoUnico, setCodigoUnico } = useTorneio(); 
   const [ativo, setAtivo] = useState(false);
 
   useEffect(() => {
@@ -18,6 +20,8 @@ export default function CriarTorneio() {
     };
     gerarCodigo();
   }, []);
+
+  const navigate = useNavigate();
 
   const copiarCodigo = async () => {
     setAtivo(true);
@@ -56,8 +60,8 @@ export default function CriarTorneio() {
             />
           </svg>
         </a>
-        <button>Próximo</button>
-      </div>
+        <button onClick={() => navigate('/menu')}>Próximo</button>
+        </div>
       <span className="ativo">{ativo ? 'Texto copiado' : ''}</span>
     </main>
   );

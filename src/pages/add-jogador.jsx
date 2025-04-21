@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/time-jogador-style/time-style.css";
+import { useTorneio } from '../context/torneioContext';
 
 export default function CriarJogador() {
   const [nomes, setNomes] = useState([""]);
   const [mensagem, setMensagem] = useState("");
+  const [temJogadores, setTemJogadores] = useState(false); // ← novo estado
 
   const adicionarInput = () => {
     setNomes([...nomes, ""]);
@@ -15,6 +17,29 @@ export default function CriarJogador() {
     setNomes(novosNomes);
   };
 
+  const { codigoUnico } = useTorneio();
+
+  useEffect(() => {
+    async function buscarJogadores() {
+      try {
+        const response = await fetch(`http://localhost:8080/jogador/all/${codigoUnico}`);
+        if (!response.ok) throw new Error("Erro ao buscar jogadores.");
+  
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setTemJogadores(true);
+          setNomes(data.map((j) => j.nomeJogador));
+        } else {
+          setTemJogadores(false);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar jogadores:", error.message);
+      }
+    }
+  
+    buscarJogadores();
+  }, []);
+
   const salvarJogadores = async (e) => {
     e.preventDefault();
 
@@ -24,7 +49,7 @@ export default function CriarJogador() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/jogador/criarJogador?nomeTime=teste",
+        `http://localhost:8080/jogador/criarJogador?codigoCampeonato=${codigoUnico}`,
         {
           method: "POST",
           headers: {
@@ -52,11 +77,11 @@ export default function CriarJogador() {
   };
 
   return (
-    <main className="criar-time">
+    <main className="add-jogador">
       <div className="content">
-        <h2 className="title">Sortear Equipe</h2>
+        <h2 className="title">JOGADORES</h2>
         <form onSubmit={salvarJogadores}>
-          <label htmlFor="">Nomes:</label>
+          <label htmlFor="">Nome</label>
           {nomes.map((nome, index) => (
             <input
               key={index}
@@ -85,8 +110,8 @@ export default function CriarJogador() {
             </button>
           </div>
 
-          <button type="submit">Sortear Equipes</button>
-        </form>
+          <button type="submit">{temJogadores ? "Editar" : "Adicionar"}</button>
+          </form>
         {mensagem && <span className="cliquei">{mensagem}</span>}
       </div>
     </main>
