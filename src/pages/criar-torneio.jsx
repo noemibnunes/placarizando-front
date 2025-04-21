@@ -2,17 +2,18 @@ import '../styles/torneio-style/torneio.css';
 import placar from '../assets/placar.svg';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useTorneio } from '../context/torneioContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function CriarTorneio() {
-  const { codigoUnico, setCodigoUnico } = useTorneio(); 
+  const [codigoUnico, setCodigoUnico] = useState();
   const [ativo, setAtivo] = useState(false);
 
   useEffect(() => {
     const gerarCodigo = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/torneio');
+        const response = await axios.get('http://localhost:8080/torneio', {
+          withCredentials: true, // <- Isso garante que o cookie venha
+        });
         setCodigoUnico(response.data);
       } catch {
         console.log('erro');
@@ -61,7 +62,7 @@ export default function CriarTorneio() {
           </svg>
         </a>
         <button onClick={() => navigate('/menu')}>Próximo</button>
-        </div>
+      </div>
       <span className="ativo">{ativo ? 'Texto copiado' : ''}</span>
     </main>
   );

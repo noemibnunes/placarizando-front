@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
-import "../styles/time-jogador-style/time-style.css";
-import { useTorneio } from '../context/torneioContext';
+import React, { useEffect, useState } from 'react';
+import '../styles/time-jogador-style/time-style.css';
 
 export default function CriarJogador() {
-  const [nomes, setNomes] = useState([""]);
-  const [mensagem, setMensagem] = useState("");
+  const [nomes, setNomes] = useState(['']);
+  const [mensagem, setMensagem] = useState('');
   const [temJogadores, setTemJogadores] = useState(false); // ← novo estado
 
   const adicionarInput = () => {
-    setNomes([...nomes, ""]);
+    setNomes([...nomes, '']);
   };
+
+  const codigoUnico = 123;
 
   const handleChange = (index, value) => {
     const novosNomes = [...nomes];
@@ -17,14 +18,12 @@ export default function CriarJogador() {
     setNomes(novosNomes);
   };
 
-  const { codigoUnico } = useTorneio();
-
   useEffect(() => {
     async function buscarJogadores() {
       try {
-        const response = await fetch(`http://localhost:8080/jogador/all/${codigoUnico}`);
-        if (!response.ok) throw new Error("Erro ao buscar jogadores.");
-  
+        const response = await fetch(`http://localhost:8080/jogador/all/`);
+        if (!response.ok) throw new Error('Erro ao buscar jogadores.');
+
         const data = await response.json();
         if (Array.isArray(data) && data.length > 0) {
           setTemJogadores(true);
@@ -33,10 +32,10 @@ export default function CriarJogador() {
           setTemJogadores(false);
         }
       } catch (error) {
-        console.error("Erro ao buscar jogadores:", error.message);
+        console.error('Erro ao buscar jogadores:', error.message);
       }
     }
-  
+
     buscarJogadores();
   }, []);
 
@@ -45,33 +44,34 @@ export default function CriarJogador() {
 
     const jogadoresValidos = nomes
       .map((nomeJogador) => nomeJogador.trim())
-      .filter((nomeJogador) => nomeJogador !== "");
+      .filter((nomeJogador) => nomeJogador !== '');
 
     try {
       const response = await fetch(
-        `http://localhost:8080/jogador/criarJogador?codigoCampeonato=${codigoUnico}`,
+        `http://localhost:8080/jogador/criarJogador`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
+          credentials: 'include',
           body: JSON.stringify(
-            jogadoresValidos.map((nomeJogador) => ({ nomeJogador }))
+            jogadoresValidos.map((nomeJogador) => ({ nomeJogador })),
           ),
-        }
+        },
       );
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Erro ao salvar jogadores.");
+        throw new Error(errorData.message || 'Erro ao salvar jogadores.');
       }
 
       setTimeout(() => {
-        setMensagem("Jogadores salvos com sucesso!");
+        setMensagem('Jogadores salvos com sucesso!');
       }, 2000);
     } catch (error) {
       setTimeout(() => {
-        setMensagem(error.message || "Erro desconhecido.");
+        setMensagem(error.message || 'Erro desconhecido.');
       }, 2000);
     }
   };
@@ -110,8 +110,8 @@ export default function CriarJogador() {
             </button>
           </div>
 
-          <button type="submit">{temJogadores ? "Editar" : "Adicionar"}</button>
-          </form>
+          <button type="submit">{temJogadores ? 'Editar' : 'Adicionar'}</button>
+        </form>
         {mensagem && <span className="cliquei">{mensagem}</span>}
       </div>
     </main>
