@@ -6,7 +6,7 @@
   align-items: center;
   margin: 0 auto;
   font-family: "Outfit", sans-serif;
-  gap: 6vh;
+  gap: 4vh;
 }
 
 .titulo-container {
@@ -36,9 +36,12 @@
 }
 
 .logo-placar span,
-.titulo-container h1 {
+.set-info h1 {
   font-family: "Electrolize", sans-serif; 
   font-size: 4vh;
+}
+
+.logo-placar span {
   padding: 12px 0 0 12px;
 }
 
@@ -49,9 +52,56 @@
   width: 100%;
 }
 
+.set-contadores-completo {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 0.5rem;
+}
+
+.set-lateral {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: white;
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+.set-info {
+  text-align: center;
+}
+
+.set-contadores {
+  margin-top: 2vh;
+  display: flex;
+  justify-content: center;
+  gap: 8vh;
+}
+
+.set-count {
+  font-size: 3vh;
+  font-weight: bold;
+  padding: 0.6rem 1rem;
+}
+
+.set-count.azul {
+  background-color: #2573ff;
+}
+
+.set-count.vermelho {
+  background-color: #f44336;
+}
+
 .time {
   flex: 1;
-  height: 60vh;
+  height: 50vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
