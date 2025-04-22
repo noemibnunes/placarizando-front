@@ -10,8 +10,6 @@ export default function CriarJogador() {
     setNomes([...nomes, '']);
   };
 
-  const codigoUnico = 123;
-
   const handleChange = (index, value) => {
     const novosNomes = [...nomes];
     novosNomes[index] = value;
@@ -21,7 +19,12 @@ export default function CriarJogador() {
   useEffect(() => {
     async function buscarJogadores() {
       try {
-        const response = await fetch(`http://localhost:8080/jogador/all/`);
+        const response = await fetch(
+          `http://localhost:8080/jogador/buscarJogadores`,
+          {
+            credentials: 'include',
+          },
+        );
         if (!response.ok) throw new Error('Erro ao buscar jogadores.');
 
         const data = await response.json();

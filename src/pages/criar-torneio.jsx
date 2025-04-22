@@ -12,7 +12,7 @@ export default function CriarTorneio() {
     const gerarCodigo = async () => {
       try {
         const response = await axios.get('http://localhost:8080/torneio', {
-          withCredentials: true, // <- Isso garante que o cookie venha
+          withCredentials: true
         });
         setCodigoUnico(response.data);
       } catch {
