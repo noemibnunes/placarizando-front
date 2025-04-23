@@ -12,7 +12,7 @@ export default function CriarTorneio() {
     const gerarCodigo = async () => {
       try {
         const response = await axios.get('http://localhost:8080/torneio', {
-          withCredentials: true
+          withCredentials: true,
         });
         setCodigoUnico(response.data);
       } catch {
@@ -43,6 +43,7 @@ export default function CriarTorneio() {
         Guarde esse código para acessar as informações sobre o torneio
         posteriormente
       </h4>
+      <span className="ativo">{ativo ? 'Texto copiado' : ''}</span>
       <div className="codigoUnico">
         <span>{codigoUnico}</span>
         <a onClick={copiarCodigo}>
@@ -61,9 +62,10 @@ export default function CriarTorneio() {
             />
           </svg>
         </a>
-        <button onClick={() => navigate('/menu')}>Próximo</button>
       </div>
-      <span className="ativo">{ativo ? 'Texto copiado' : ''}</span>
+      <button onClick={() => navigate('/menu')}>Próximo</button>
+      <p>ou</p>
+      <a className="buscarTorneio" onClick={() => navigate('/modo-torneio')}>Buscar Torneio.</a>
     </main>
   );
 }
