@@ -1,3 +1,13 @@
+.home,
+.torneio {
+  background-image: url("../assets/footer.svg");
+  background-size: auto;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  height: 100vh;
+  margin: 0;
+}
+
 span {
   font-family: "Electrolize", sans-serif
 }
@@ -14,7 +24,7 @@ button {
   color: #151F29;
   font-weight: 500;
   justify-self: center;
-  width: 40vh;
+  width: 30vh;
   padding: 1.8vh;
   font-size: 2vh;
   letter-spacing: 0.2vh;

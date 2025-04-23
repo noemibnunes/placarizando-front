@@ -1,6 +1,7 @@
-import '../styles/home-style/home-style.css';
-import logoPlacar from '../assets/placar.svg';
+import '../styles/torneio-style/torneio.css';
 import { useNavigate } from 'react-router-dom';
+import placar from '../assets/placar.svg';
+
 import React from 'react';
 
 export default function Menu() {
@@ -11,13 +12,14 @@ export default function Menu() {
   };
 
   return (
-    <main className="home">
-      <div className="home-content">
-        <img src={logoPlacar} alt="Logo do menu" />
-        <button onClick={navigateAdicionarJogador}>Jogadores</button>
-        <button>Time</button>
-        <button>Partidas</button>
+    <main className="torneio">
+      <div className="cabecalho">
+        <img src={placar} alt="placar" />
+        <span>modo torneio</span>
       </div>
+      <button onClick={navigateAdicionarJogador}>Jogadores</button>
+      <button>Time</button>
+      <button>Partidas</button>
     </main>
   );
 }
