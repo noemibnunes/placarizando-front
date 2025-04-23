@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import "../styles/time-jogador-style/time-style.css";
+import React, { useEffect, useState } from 'react';
+import '../styles/time-jogador-style/time-style.css';
 
 export default function CriarJogador() {
-  const [nomes, setNomes] = useState([""]);
-  const [mensagem, setMensagem] = useState("");
+  const [nomes, setNomes] = useState(['']);
+  const [mensagem, setMensagem] = useState('');
+  const [temJogadores, setTemJogadores] = useState(false); // ← novo estado
 
   const adicionarInput = () => {
-    setNomes([...nomes, ""]);
+    setNomes([...nomes, '']);
   };
 
   const handleChange = (index, value) => {
@@ -15,48 +16,75 @@ export default function CriarJogador() {
     setNomes(novosNomes);
   };
 
+  useEffect(() => {
+    async function buscarJogadores() {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/jogador/buscarJogadores`,
+          {
+            credentials: 'include',
+          },
+        );
+        if (!response.ok) throw new Error('Erro ao buscar jogadores.');
+
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setTemJogadores(true);
+          setNomes(data.map((j) => j.nomeJogador));
+        } else {
+          setTemJogadores(false);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar jogadores:', error.message);
+      }
+    }
+
+    buscarJogadores();
+  }, []);
+
   const salvarJogadores = async (e) => {
     e.preventDefault();
 
     const jogadoresValidos = nomes
       .map((nomeJogador) => nomeJogador.trim())
-      .filter((nomeJogador) => nomeJogador !== "");
+      .filter((nomeJogador) => nomeJogador !== '');
 
     try {
       const response = await fetch(
-        "http://localhost:8080/jogador/criarJogador?nomeTime=teste",
+        `http://localhost:8080/jogador/criarJogador`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
+          credentials: 'include',
           body: JSON.stringify(
-            jogadoresValidos.map((nomeJogador) => ({ nomeJogador }))
+            jogadoresValidos.map((nomeJogador) => ({ nomeJogador })),
           ),
-        }
+        },
       );
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Erro ao salvar jogadores.");
+        throw new Error(errorData.message || 'Erro ao salvar jogadores.');
       }
 
       setTimeout(() => {
-        setMensagem("Jogadores salvos com sucesso!");
+        setMensagem('Jogadores salvos com sucesso!');
       }, 2000);
     } catch (error) {
       setTimeout(() => {
-        setMensagem(error.message || "Erro desconhecido.");
+        setMensagem(error.message || 'Erro desconhecido.');
       }, 2000);
     }
   };
 
   return (
-    <main className="criar-time">
+    <main className="add-jogador">
       <div className="content">
-        <h2 className="title">Sortear Equipe</h2>
+        <h2 className="title">JOGADORES</h2>
         <form onSubmit={salvarJogadores}>
-          <label htmlFor="">Nomes:</label>
+          <label htmlFor="">Nome</label>
           {nomes.map((nome, index) => (
             <input
               key={index}
@@ -85,7 +113,7 @@ export default function CriarJogador() {
             </button>
           </div>
 
-          <button type="submit">Sortear Equipes</button>
+          <button type="submit">{temJogadores ? 'Editar' : 'Adicionar'}</button>
         </form>
         {mensagem && <span className="cliquei">{mensagem}</span>}
       </div>
