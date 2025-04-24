@@ -80,7 +80,7 @@ export default function CriarJogador() {
   };
 
   return (
-    <main className="add-jogador">
+    <main className="criar-jogador ">
       <div className="content">
         <h2 className="title">JOGADORES</h2>
         <form onSubmit={salvarJogadores}>
