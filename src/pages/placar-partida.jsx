@@ -35,10 +35,10 @@ export default function PlacarPartida() {
   return (
     <main className="partida-content">
       <div className="partida-logo">
-        <div className="logo-left">
+        <a href="/" className="logo-left">
           <img src={logoPlacar} alt="logo" />
           <span>modo partida</span>
-        </div>
+        </a>
         <h4>SET</h4>
         <div className="placeholder" />
       </div>
@@ -52,7 +52,7 @@ export default function PlacarPartida() {
                   key={set.numero}
                   style={{
                     backgroundColor:
-                      set.vencedor === 'left' ? 'green' : '#ef4444',
+                      set.vencedor === 'left' ? '#f17d60' : null,
                   }}
                 >
                   <span>{set.numero + 'ºset'}</span>
@@ -62,7 +62,7 @@ export default function PlacarPartida() {
             </ul>
             <div
               className="contar-pontos"
-              style={{ backgroundColor: '#3b82f6' }}
+              style={{ backgroundColor: '#f17d60' }}
               onClick={handleLeftTeamClick}
             >
               <button
@@ -89,7 +89,7 @@ export default function PlacarPartida() {
                   key={set.numero}
                   style={{
                     backgroundColor:
-                      set.vencedor === 'right' ? 'green' : '#ef4444',
+                      set.vencedor === 'right' ? '#00aad3' : null,
                   }}
                 >
                   <span>{set.numero + 'ºset'}</span>
@@ -99,7 +99,7 @@ export default function PlacarPartida() {
             </ul>
             <div
               className="contar-pontos"
-              style={{ backgroundColor: '#8b5cf6' }}
+              style={{ backgroundColor: '#00aad3' }}
               onClick={handleRightTeamClick}
             >
               <button
