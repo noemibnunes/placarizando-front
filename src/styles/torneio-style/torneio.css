@@ -1,3 +1,7 @@
+p {
+  font-size: 2vh;
+}
+
 .torneio {
   height: 100vh;
   display: flex;
@@ -10,7 +14,7 @@
 .cabecalho {
   display: flex;
   align-items: center;
-  justify-content: center; /* Adicionado para centralizar o cabeçalho */
+  justify-content: center;
   gap: 1vh;
   margin-bottom: 3vh;
 }
@@ -32,21 +36,20 @@
 }
 
 .codigoUnico {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 1vh;
 }
 
 .codigoUnico span {
-  width: 30vh;
-  height: 6vh;
+  width: 26vh;
+  height: 7vh;
   background-color: #162E46;
   border-radius: 5px;
   color: #fff;
   text-align: center;
-  font-size: 3vh;
+  font-size: 2.6vh;
   font-weight: 600;
   padding: 0 2vh;
   cursor: pointer;  
@@ -62,9 +65,15 @@
   cursor: pointer;
 }
 
+.buscarTorneio {
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 2.6vh;
+}
+
 .proximo {
   display: flex;
-  align-items: center; /* Alinhando a seta com o texto */
+  align-items: center;
   justify-content: center;
 }
 
@@ -73,7 +82,24 @@
   height: 4vh;
 }
 
-.ativo {
+.ativo,
+.sucesso {
   font-size: 2vh;
-  color: green;
+  color: #6eaa5e;
 }
+
+.erro {
+  font-size: 2vh;
+  color: red;
+}
+
+.sucesso,
+.erro {
+  transition: all 0.3s ease;
+}
+
+.inserirCodigo input {
+  margin-top: 4px;
+}
+
+

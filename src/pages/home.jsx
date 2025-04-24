@@ -10,7 +10,7 @@ export default function Home() {
     navigate('/placar-partida');
   };
 
-  const navigateCriarTorneio = async () => {
+  const navigateModoTorneio = async () => {
     navigate('/criar-torneio');
   };
 
@@ -19,7 +19,7 @@ export default function Home() {
       <div className="home-content">
         <img src={logo} alt="Logo do jogo" />
         <button onClick={navigateIniciarPartida}>Modo Partida</button>
-        <button onClick={navigateCriarTorneio}>Modo Torneio</button>
+        <button onClick={navigateModoTorneio}>Modo Torneio</button>
       </div>
     </main>
   );

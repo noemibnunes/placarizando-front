@@ -1,13 +1,11 @@
-button,
-h4,
-.codigoUnico {
-  font-family: "Outfit", sans-serif;
+span {
+  font-family: "Electrolize", sans-serif
 }
 
 body {
   background-color: #162029;
   color: #fff;
-  font-family: "Electrolize", sans-serif; 
+  font-family: "Outfit", sans-serif;
 }
 
 button {
@@ -18,7 +16,7 @@ button {
   justify-self: center;
   width: 40vh;
   padding: 1.8vh;
-  font-size: 2.5vh;
+  font-size: 2vh;
   letter-spacing: 0.2vh;
   font-weight: 600;
 }
@@ -31,8 +29,11 @@ input {
   padding: 1vh;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
   outline: none;
+}
+
+label {
+  font-size: 2vh;
 }
 
 form span {
