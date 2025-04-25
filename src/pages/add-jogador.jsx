@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import "../styles/time-jogador-style/jogador-style.css";
 import "../styles/time-jogador-style/time-style.css";
 import "../styles/default-style.css";
-import voltar from "../assets/icon-back.svg";
 import deletar from "../assets/icon-delete.svg";
 import add from "../assets/icon-add.svg";
 import editar from "../assets/icon-edit.svg";
+import Header from "../components/Header";
 
 export default function CriarJogador() {
   const [jogadores, setJogadores] = useState([{}]);
@@ -87,10 +87,6 @@ export default function CriarJogador() {
     }
   };
 
-  const voltarPaginaAnterior = () => {
-    window.history.back();
-  };
-
   const deletarJogador = async (index, jogador) => {
     if (!jogador.nomeJogador || jogador.nomeJogador.trim() === "") {
       setJogadores(jogadores.filter((_, i) => i !== index));
@@ -100,16 +96,7 @@ export default function CriarJogador() {
   return (
     <main className="add-jogador">
       <div className="content">
-        <div className="header-content">
-          <img
-            className="icon-back"
-            src={voltar}
-            alt="Icon de voltar"
-            onClick={voltarPaginaAnterior}
-          />
-          <h2 className="title">JOGADORES</h2>
-        </div>
-
+        <Header title="JOGADORES" /> 
         <div className="filtro-time">
           <label>Filtrar por time</label>
             <select name="select">
