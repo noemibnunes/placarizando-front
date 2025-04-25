@@ -96,13 +96,15 @@ export default function CriarJogador() {
   return (
     <main className="add-jogador">
       <div className="content">
-        <Header title="JOGADORES" /> 
+        <Header title="JOGADORES" />
         <div className="filtro-time">
           <label>Filtrar por time</label>
-            <select name="select">
-              <option value="selecione" select>Selecione</option>
-              <option value="">Valor 3</option>
-            </select>
+          <select name="select">
+            <option value="selecione" select>
+              Selecione
+            </option>
+            <option value="">Valor 3</option>
+          </select>
         </div>
 
         <form onSubmit={salvarJogadores}>
@@ -142,11 +144,7 @@ export default function CriarJogador() {
                 onClick={() => deletarJogador(index, jogador)}
               />
 
-              <img
-                className="icon-edit"
-                src={editar}
-                alt="Icon de editar"
-              />
+              <img className="icon-edit" src={editar} alt="Icon de editar" />
             </div>
           ))}
 
@@ -155,9 +153,13 @@ export default function CriarJogador() {
               <img className="icon-add" src={add} alt="Icon de adicionar" />
             </button>
           </div>
-
-          <button type="submit">Salvar</button>
         </form>
+      </div>
+
+      <div className="footer">
+        <div className="btn-salvar">
+          <button type="submit">Salvar</button>
+        </div>
         {mensagem && <span className="cliquei">{mensagem}</span>}
       </div>
     </main>

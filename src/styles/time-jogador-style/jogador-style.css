@@ -35,7 +35,7 @@
 }
 
 .add-jogador{
-  height: 100vh;
+  height: 60vh;
   display: grid;
   place-items: center; 
 }
@@ -64,4 +64,15 @@ select {
 select:focus {
   box-shadow: 0 0 0 2px #FCA914;
   outline: none;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+}
+
+.btn-salvar {
+  text-align: center;
 }
