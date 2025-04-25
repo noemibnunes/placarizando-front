@@ -1,52 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/time-jogador-style/time-style.css';
 import axios from 'axios';
+import ListarTimesComJogadores from '../components/ListarTimesComJogadores';
 
 export default function CriarTime() {
   const [times, setTimes] = useState([
-    { nomeTime: '', corReferencia: '#FFFFFF' },
-    { nomeTime: '', corReferencia: '#FFFFFF' },
+    {
+      nomeTime: '',
+      corReferencia: '#FFFFFF',
+    },
   ]);
 
+  const [jogadores, setJogadores] = useState(['']);
+
+  const [ativo, setAtivo] = useState(false);
   const [mensagem, setMensagem] = useState('');
-  const [currentSlide, setCurrentSlide] = useState(0);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTimes((prev) => {
-      const updated = [...prev];
-      updated[currentSlide] = { ...updated[currentSlide], [name]: value };
-      return updated;
-    });
+  useEffect(() => {
+    if (times.length === 2) {
+      setAtivo(true);
+    } else {
+      setAtivo(false);
+    }
+  }, [times]);
+
+  const adicionarInput = () => {
+    setTimes([...times, { nomeTime: '', corReferencia: '#FFFFFF' }]);
   };
 
-  const handleColorChange = (e) => {
-    const { value } = e.target;
-    setTimes((prev) => {
-      const updated = [...prev];
-      updated[currentSlide].corReferencia = value;
-      return updated;
-    });
+  const handleNomeTime = (index, value) => {
+    const novosTimes = [...times];
+    novosTimes[index].nomeTime = value;
+    setTimes(novosTimes);
   };
 
-  const submeterTime = async (e) => {
+  const handleCor = (index, value) => {
+    const novosTimes = [...times];
+    novosTimes[index].corReferencia = value;
+    setTimes(novosTimes);
+  };
+
+  useEffect(() => {
+    const buscarTimes = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/time', {
+          withCredentials: true,
+        });
+        setTimes(response.data);
+      } catch {
+        console.log('erro');
+      }
+    };
+    buscarTimes();
+  }, []);
+
+  const enviarTimes = async (e) => {
     e.preventDefault();
 
     try {
-      await Promise.all(
-        times.map((time) =>
-          axios.post('http://localhost:8080/time/criarTime', time),
-        ),
+      const response = await axios.post(
+        'http://localhost:8080/time/criarTime',
+        times,
+        {
+          withCredentials: true,
+        },
       );
-      setTimeout(() => {
+
+      if (response.status === 201) {
         setMensagem('Times criados com sucesso!');
-      }, 2000);
-    } catch (err) {
-      setTimeout(() => {
-        setMensagem(err.response.data.message);
-      }, 3000);
+      }
+    } catch {
+      console.log('erro');
     }
   };
+
+  useEffect(() => {
+    const buscarJogadores = async () => {
+      try {
+        const response = await axios
+          .get(
+            'http://localhost:8080/jogador/buscarJogadoresRelacionadosAoTime',
+            { param: { nomeTime: times[0].nomeTime }, withCredentials: true },
+          )
+          .then(setJogadores(response.data));
+      } catch {
+        console.log('erro');
+      }
+    };
+    if (times >= 1) buscarJogadores();
+  }, [jogadores]);
 
   return (
     <main className="criar-time">
@@ -68,101 +110,109 @@ export default function CriarTime() {
         <span>times</span>
       </header>
       <div className="times">
-        <div className="dados-time">
-          <form>
-            <label htmlFor="">Time</label>
-            <input></input>
-          </form>
-          <form>
-            <label htmlFor="">Cor</label>
-            <input type="color"></input>
-          </form>
-        </div>
+        {times.length >= 0 ? '' : <h4>Insira dois times para enviar:</h4>}
+        {times.length >= 0 ? (
+          <div className="dados-time">
+            <form className="read-only">
+              <label htmlFor="">Time</label>
+              {times.map((time, index) => (
+                <input
+                  key={index}
+                  readOnly
+                  value={time.nomeTime}
+                  name={`nome${index}`}
+                />
+              ))}
+            </form>
+            <form>
+              <label htmlFor="">Cor</label>
+              {times.map((time, index) => (
+                <input
+                  key={index}
+                  type="color"
+                  disabled
+                  value={time.corReferencia}
+                  name={`cor${index}`}
+                />
+              ))}
+            </form>
+          </div>
+        ) : (
+          <div className="dados-time">
+            <form>
+              <label htmlFor="">Time</label>
+              {times.map((time, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  value={times.nomeTime}
+                  onChange={(e) => handleNomeTime(index, e.target.value)}
+                  name={`nome${index}`}
+                />
+              ))}
+            </form>
+            <form>
+              <label htmlFor="">Cor</label>
+              {times.map((time, index) => (
+                <input
+                  key={index}
+                  type="color"
+                  value={time.corReferencia}
+                  onChange={(e) => handleCor(index, e.target.value)}
+                  name={`cor${index}`}
+                />
+              ))}
+            </form>
+          </div>
+        )}
         <div className="btn-add-wrapper">
-          <button type="button" className="btn-add">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              className="icon-plus"
-            >
-              <path
-                d="M12 5v14M5 12h14"
-                stroke="black"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+          <button
+            type="button"
+            className={`btn-add ${ativo ? 'ativo' : ''}`}
+            onClick={ativo ? enviarTimes : adicionarInput}
+          >
+            {times.length === 2 ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="#fff"
+                className="size-6"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="icon-plus"
+              >
+                <path
+                  d="M12 5v14M5 12h14"
+                  stroke="black"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
           </button>
         </div>
+        <span>{mensagem}</span>
+      </div>
+      <div>
+        <ListarTimesComJogadores
+          nomeTime={times[0].nomeTime}
+          jogadores={jogadores}
+        />
+      </div>
+      <div className="botoes-escolha">
+        <button>Escolher Times</button>
+        <button>Sortear Times</button>
       </div>
     </main>
-
-    // <main className="criar-time">
-    //   <div className="content">
-    //     <div>
-    //       <img src={text} alt="Criar Time" />
-    //     </div>
-    //     <div className="carousel">
-    //       <form onSubmit={submeterTime}>
-    //         <h2>Criar {`Time ${currentSlide + 1}`}</h2>
-    //         <label htmlFor="">Nome do Time:</label>
-    //         <input
-    //           type="text"
-    //           value={times[currentSlide].nomeTime}
-    //           onChange={handleChange}
-    //           name="nomeTime"
-    //         />
-    //         <span />
-
-    //         <label
-    //           htmlFor="hs-color-input"
-    //           className="block text-sm font-medium mb-2"
-    //         >
-    //           Escolha a Cor:
-    //         </label>
-    //         <input
-    //           type="color"
-    //           id="hs-color-input"
-    //           value={times[currentSlide].corReferencia}
-    //           onChange={handleColorChange}
-    //           title="Escolha a cor do seu time"
-    //           className="p-1 h-10 w-14 block bg-white border cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none"
-    //         />
-
-    //         <div className="buttons">
-    //           {currentSlide > 0 && (
-    //             <button
-    //               type="button"
-    //               className="btn-voltar"
-    //               onClick={(e) => {
-    //                 e.preventDefault();
-    //                 setCurrentSlide(currentSlide - 1);
-    //               }}
-    //             >
-    //               Voltar
-    //             </button>
-    //           )}
-    //           {currentSlide === 1 ? (
-    //             <button type="submit">Enviar</button>
-    //           ) : (
-    //             <button
-    //               type="button"
-    //               className="btn-prox"
-    //               disabled={!times[currentSlide].nomeTime.trim()}
-    //               onClick={(e) => {
-    //                 e.preventDefault();
-    //                 setCurrentSlide(currentSlide + 1);
-    //               }}
-    //             >
-    //               Próximo
-    //             </button>
-    //           )}
-    //         </div>
-    //       </form>
-    //       {mensagem && <span className="cliquei">{mensagem}</span>}
-    //     </div>
-    //   </div>
-    // </main>
   );
 }

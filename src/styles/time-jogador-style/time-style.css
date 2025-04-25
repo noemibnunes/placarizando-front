@@ -1,3 +1,10 @@
+h4 {
+  font-size: 2vh;
+  padding: 2vh;
+  text-align: center;
+  font-weight: 400;
+}
+
 .criar-time {
   height: 100vh;
   display: grid;
@@ -26,7 +33,13 @@
 
 .times {
   display: grid;
-  border: 1px solid red;
+  margin: 3vh 0;
+}
+
+.times span {
+  text-align: center;
+  color:  #6eaa5e;
+  font-size: 2vh;
 }
 
 .dados-time {
@@ -35,8 +48,19 @@
   gap: 1vh;
 }
 
-.dados-time input[type="color"] {
+.dados-time input[type="color"]{
   width: 6vh;
+}
+
+.dados-time input,
+.dados-time input[type="color"] {
+  background-color: #35526F;
+  cursor: not-allowed;
+  margin-bottom: 1vh;
+}
+
+.read-only input:focus {
+  box-shadow: none;
 }
 
 .btn-add {
@@ -55,4 +79,18 @@
   display: flex;
   justify-content: flex-end;
   margin: 2vh 0;
+}
+
+.botoes-escolha {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+.botoes-escolha button {
+width: 32vh;
+}
+
+.ativo  {
+  background-color: #006400;
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/time-jogador-style/time-style.css';
+import '../styles/time-jogador-style/jogador-style.css';
 
 export default function CriarJogador() {
   const [nomes, setNomes] = useState(['']);
