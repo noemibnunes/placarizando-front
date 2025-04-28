@@ -2,15 +2,18 @@ import '../styles/torneio-style/torneio.css';
 import placar from '../assets/placar.svg';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function CriarTorneio() {
-  const [codigoUnico, setCodigoUnico] = useState(null);
+  const [codigoUnico, setCodigoUnico] = useState();
   const [ativo, setAtivo] = useState(false);
 
   useEffect(() => {
     const gerarCodigo = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/torneio');
+        const response = await axios.get('http://localhost:8080/torneio', {
+          withCredentials: true,
+        });
         setCodigoUnico(response.data);
       } catch {
         console.log('erro');
@@ -18,6 +21,8 @@ export default function CriarTorneio() {
     };
     gerarCodigo();
   }, []);
+
+  const navigate = useNavigate();
 
   const copiarCodigo = async () => {
     setAtivo(true);
@@ -38,6 +43,7 @@ export default function CriarTorneio() {
         Guarde esse código para acessar as informações sobre o torneio
         posteriormente
       </h4>
+      <span className="ativo">{ativo ? 'Texto copiado' : ''}</span>
       <div className="codigoUnico">
         <span>{codigoUnico}</span>
         <a onClick={copiarCodigo}>
@@ -56,9 +62,10 @@ export default function CriarTorneio() {
             />
           </svg>
         </a>
-        <button>Próximo</button>
       </div>
-      <span className="ativo">{ativo ? 'Texto copiado' : ''}</span>
+      <button onClick={() => navigate('/menu')}>Próximo</button>
+      <p>ou</p>
+      <a className="buscarTorneio" onClick={() => navigate('/modo-torneio')}>Buscar Torneio.</a>
     </main>
   );
 }

@@ -4,8 +4,10 @@ import Home from './pages/home';
 import PlacarPartida from './pages/placar-partida';
 import './styles/index.css';
 import CriarTime from './pages/criar-time';
-import CriarJogador from './pages/criar-jogador';
+import AdicionarJogador from './pages/add-jogador';
 import CriarTorneio from './pages/criar-torneio';
+import ModoTorneio from './pages/modo-torneio';
+import Menu from './pages/menu';
 
 function App() {
   return (
@@ -14,8 +16,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/criar-time" element={<CriarTime />} />
         <Route path="/placar-partida" element={<PlacarPartida />} />
-        <Route path="/criar-jogador" element={<CriarJogador />} />
+        <Route path="/add-jogador" element={<AdicionarJogador />} />
+        <Route path="/modo-torneio" element={<ModoTorneio />} />
         <Route path="/criar-torneio" element={<CriarTorneio />} />
+        <Route path="/menu" element={<Menu />} />
       </Routes>
     </BrowserRouter>
   );
