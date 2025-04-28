@@ -1,14 +1,107 @@
 .partida {
   height: 100vh;
+  flex-direction: column;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  font-family: "Outfit", sans-serif;
+  gap: 4vh;
+}
+
+.titulo-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  position: relative;
+  padding: 0 16px;
+}
+
+.titulo-container h1 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logo-placar {
+  display: flex;
+  align-items: center;   
+  gap: 1vh;
+}
+
+.logo-placar img {
+  width: 12vh;
+  margin-left: 12px;
+}
+
+.logo-placar span,
+.set-info h1 {
+  font-family: "Electrolize", sans-serif; 
+  font-size: 4vh;
+}
+
+.logo-placar span {
+  padding: 12px 0 0 12px;
+}
+
+.placares {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.set-contadores-completo {
+  display: flex;
+  justify-content: center;
+  gap: 8vh;
+  margin-top: 0.5rem;
+}
+
+.set-lateral {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.score-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: white;
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
+
+.set-info {
+  text-align: center;
+}
+
+.set-contadores {
+  margin-top: 2vh;
+  display: flex;
+  justify-content: center;
+  gap: 8vh;
+}
+
+.set-count {
+  font-size: 3vh;
+  font-weight: bold;
+  padding: 0.6rem 1rem;
+}
+
+.set-count.azul {
+  background-color: #2573ff;
+}
+
+.set-count.vermelho {
+  background-color: #f44336;
 }
 
 .time {
   flex: 1;
-  height: 60vh;
+  height: 50vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -56,4 +149,41 @@
   background-color: #4b5563;
   border-radius: 10px;
   margin: 0 16px;
+}
+
+
+@media (max-width: 450px) {
+  .placares {
+    gap: 2vh;
+  }
+
+  .divider {
+    height: 26vh;
+  }
+
+  .set-contadores-completo {
+    gap: 13vh;
+  }
+
+  .time {
+    width: 80vw;
+    height: 30vh;
+    flex-direction: row;
+  }
+
+  .azul button,
+  .vermelho button {
+    width: 6vh;
+    height: 6vh;
+    font-size: 1.4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .pontuacao span {
+    font-size: 2.2rem;
+  }
 }

@@ -5,6 +5,7 @@ import PlacarPartida from './pages/placar-partida';
 import './styles/index.css';
 import CriarTime from './pages/criar-time';
 import CriarJogador from './pages/criar-jogador';
+import CriarTorneio from './pages/criar-torneio';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/criar-time" element={<CriarTime />} />
         <Route path="/placar-partida" element={<PlacarPartida />} />
         <Route path="/criar-jogador" element={<CriarJogador />} />
+        <Route path="/criar-torneio" element={<CriarTorneio />} />
       </Routes>
     </BrowserRouter>
   );
