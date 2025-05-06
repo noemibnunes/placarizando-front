@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import PlacarTime from '../components/PlacarTime'; // Importa o componente PlacarTime
 import '../styles/placar-partida-style/placar-partida-style.css';
 import logoPlacar from '../assets/placar.svg';
 
 export default function PlacarPartida() {
   const [leftTeamCount, setLeftTeamCount] = useState(0);
   const [rightTeamCount, setRightTeamCount] = useState(0);
-
   const [sets, setSets] = useState([]);
 
   const finalizarSet = () => {
@@ -35,86 +35,32 @@ export default function PlacarPartida() {
   return (
     <main className="partida-content">
       <div className="partida-logo">
-        <div className="logo-left">
+        <a href="/" className="logo-left">
           <img src={logoPlacar} alt="logo" />
           <span>modo partida</span>
-        </div>
+        </a>
         <h4>SET</h4>
         <div className="placeholder" />
       </div>
 
       <div className="placar">
-        <div className="placar1">
-          <div>
-            <ul className="pontuacao">
-              {sets.map((set) => (
-                <li
-                  key={set.numero}
-                  style={{
-                    backgroundColor:
-                      set.vencedor === 'left' ? 'green' : '#ef4444',
-                  }}
-                >
-                  <span>{set.numero + 'ºset'}</span>
-                  <h3>{set.leftScore}</h3>
-                </li>
-              ))}
-            </ul>
-            <div
-              className="contar-pontos"
-              style={{ backgroundColor: '#3b82f6' }}
-              onClick={handleLeftTeamClick}
-            >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  decreaseLeftTeamCount();
-                }}
-                className="botao-flutuante"
-              >
-                &#x2212;
-              </button>
-              <span>{leftTeamCount}</span>
-            </div>
-          </div>
-        </div>
-
+        <PlacarTime
+          team="left"
+          teamCount={leftTeamCount}
+          handleClick={handleLeftTeamClick}
+          decreaseCount={decreaseLeftTeamCount}
+          sets={sets}
+        />
+        
         <div className="divisao"></div>
 
-        <div className="placar2">
-          <div>
-            <ul className="pontuacao">
-              {sets.map((set) => (
-                <li
-                  key={set.numero}
-                  style={{
-                    backgroundColor:
-                      set.vencedor === 'right' ? 'green' : '#ef4444',
-                  }}
-                >
-                  <span>{set.numero + 'ºset'}</span>
-                  <h3>{set.rightScore}</h3>
-                </li>
-              ))}
-            </ul>
-            <div
-              className="contar-pontos"
-              style={{ backgroundColor: '#8b5cf6' }}
-              onClick={handleRightTeamClick}
-            >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  decreaseRightTeamCount();
-                }}
-                className="botao-flutuante"
-              >
-                &#x2212;
-              </button>
-              <span>{rightTeamCount}</span>
-            </div>
-          </div>
-        </div>
+        <PlacarTime
+          team="right"
+          teamCount={rightTeamCount}
+          handleClick={handleRightTeamClick}
+          decreaseCount={decreaseRightTeamCount}
+          sets={sets}
+        />
       </div>
 
       <button onClick={finalizarSet}>Finalizar Set</button>
