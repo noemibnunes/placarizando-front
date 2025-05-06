@@ -1,19 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import '../styles/time-jogador-style/time-style.css';
+import React, { useEffect, useState } from "react";
+import "../styles/time-jogador-style/jogador-style.css";
+import "../styles/time-jogador-style/time-style.css";
+import "../styles/default-style.css";
+import deletar from "../assets/icon-delete.svg";
+import add from "../assets/icon-add.svg";
+import editar from "../assets/icon-edit.svg";
+import Header from "../components/Header";
 
 export default function CriarJogador() {
-  const [nomes, setNomes] = useState(['']);
-  const [mensagem, setMensagem] = useState('');
-  const [temJogadores, setTemJogadores] = useState(false); // ← novo estado
+  const [jogadores, setJogadores] = useState([{}]);
+  const [mensagem, setMensagem] = useState("");
 
   const adicionarInput = () => {
-    setNomes([...nomes, '']);
+    setJogadores([...jogadores, {}]);
   };
 
-  const handleChange = (index, value) => {
-    const novosNomes = [...nomes];
-    novosNomes[index] = value;
-    setNomes(novosNomes);
+  const handleChangeNome = (index, value) => {
+    const novosJogadores = [...jogadores];
+    novosJogadores[index].nomeJogador = value;
+    setJogadores(novosJogadores);
+  };
+
+  const handleChangeNota = (index, value) => {
+    const novosJogadores = [...jogadores];
+    novosJogadores[index].nota = value;
+    setJogadores(novosJogadores);
   };
 
   useEffect(() => {
@@ -22,20 +33,17 @@ export default function CriarJogador() {
         const response = await fetch(
           `http://localhost:8080/jogador/buscarJogadores`,
           {
-            credentials: 'include',
-          },
+            credentials: "include",
+          }
         );
-        if (!response.ok) throw new Error('Erro ao buscar jogadores.');
+        if (!response.ok) throw new Error("Erro ao buscar jogadores.");
 
         const data = await response.json();
         if (Array.isArray(data) && data.length > 0) {
-          setTemJogadores(true);
-          setNomes(data.map((j) => j.nomeJogador));
-        } else {
-          setTemJogadores(false);
+          setJogadores(data.map((j) => j.nomeJogador));
         }
       } catch (error) {
-        console.error('Erro ao buscar jogadores:', error.message);
+        console.error("Erro ao buscar jogadores:", error.message);
       }
     }
 
@@ -45,76 +53,113 @@ export default function CriarJogador() {
   const salvarJogadores = async (e) => {
     e.preventDefault();
 
-    const jogadoresValidos = nomes
+    const jogadoresValidos = jogadores
       .map((nomeJogador) => nomeJogador.trim())
-      .filter((nomeJogador) => nomeJogador !== '');
+      .filter((nomeJogador) => nomeJogador !== "");
 
     try {
       const response = await fetch(
         `http://localhost:8080/jogador/criarJogador`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          credentials: 'include',
+          credentials: "include",
           body: JSON.stringify(
-            jogadoresValidos.map((nomeJogador) => ({ nomeJogador })),
+            jogadoresValidos.map((nomeJogador) => ({ nomeJogador }))
           ),
-        },
+        }
       );
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Erro ao salvar jogadores.');
+        throw new Error(errorData.message || "Erro ao salvar jogadores.");
       }
 
       setTimeout(() => {
-        setMensagem('Jogadores salvos com sucesso!');
+        setMensagem("Jogadores salvos com sucesso!");
       }, 2000);
     } catch (error) {
       setTimeout(() => {
-        setMensagem(error.message || 'Erro desconhecido.');
+        setMensagem(error.message || "Erro desconhecido.");
       }, 2000);
+    }
+  };
+
+  const deletarJogador = async (index, jogador) => {
+    if (!jogador.nomeJogador || jogador.nomeJogador.trim() === "") {
+      setJogadores(jogadores.filter((_, i) => i !== index));
     }
   };
 
   return (
     <main className="add-jogador">
       <div className="content">
-        <h2 className="title">JOGADORES</h2>
+        <Header title="JOGADORES" />
+        <div className="filtro-time">
+          <label>Filtrar por time</label>
+          <select name="select">
+            <option value="selecione" select>
+              Selecione
+            </option>
+            <option value="">Valor 3</option>
+          </select>
+        </div>
+
         <form onSubmit={salvarJogadores}>
-          <label htmlFor="">Nome</label>
-          {nomes.map((nome, index) => (
-            <input
-              key={index}
-              type="text"
-              value={nome}
-              onChange={(e) => handleChange(index, e.target.value)}
-              name={`nome${index}`}
-            />
+          <div className="labels">
+            <label style={{ flex: 1 }} htmlFor="">
+              Nome
+            </label>
+            <label style={{ flex: 1 }} htmlFor="">
+              Nota
+            </label>
+          </div>
+
+          {jogadores.map((jogador, index) => (
+            <div className="jogador">
+              <input
+                style={{ flex: 2 }}
+                key={index}
+                type="text"
+                value={jogador.nomeJogador}
+                onChange={(e) => handleChangeNome(index, e.target.value)}
+                name={`nome${index}`}
+              />
+
+              <input
+                style={{ flex: 1 }}
+                key={index}
+                type="text"
+                value={jogador.nota}
+                onChange={(e) => handleChangeNota(index, e.target.value)}
+                name={`nota${index}`}
+              />
+
+              <img
+                className="icon-delete"
+                src={deletar}
+                alt="Icon de deletar"
+                onClick={() => deletarJogador(index, jogador)}
+              />
+
+              <img className="icon-edit" src={editar} alt="Icon de editar" />
+            </div>
           ))}
 
           <div className="btn-add-wrapper">
             <button type="button" className="btn-add" onClick={adicionarInput}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="icon-plus"
-              >
-                <path
-                  d="M12 5v14M5 12h14"
-                  stroke="black"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <img className="icon-add" src={add} alt="Icon de adicionar" />
             </button>
           </div>
-
-          <button type="submit">{temJogadores ? 'Editar' : 'Adicionar'}</button>
         </form>
+      </div>
+
+      <div className="footer">
+        <div className="btn-salvar">
+          <button type="submit">Salvar</button>
+        </div>
         {mensagem && <span className="cliquei">{mensagem}</span>}
       </div>
     </main>
