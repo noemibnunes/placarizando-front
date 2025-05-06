@@ -32,7 +32,7 @@ button {
 }
 
 input {
-  width: 30vh;
+  width: 30vw;
   height: 6vh;
   background-color: #162E46;
   color: #ffffff;
@@ -49,3 +49,16 @@ label {
 form span {
   margin-bottom: 3vh;
 }
+
+.header-content {
+  display: flex;
+  align-items: center; 
+  width: 100%; 
+
+  .title {
+    text-align: center;
+    flex-grow: 1; 
+  }
+}
+
+
