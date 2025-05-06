@@ -11,10 +11,16 @@ export default function CriarTime() {
     },
   ]);
 
-  const [jogadores, setJogadores] = useState(['']);
+  const [timesComJogadores, setTimesComJogadores] = useState([
+    {
+      nomeTime: '',
+      jogadores: [],
+    },
+  ]);
 
   const [ativo, setAtivo] = useState(false);
   const [mensagem, setMensagem] = useState('');
+  const [editar, setEditar] = useState(false);
 
   useEffect(() => {
     if (times.length === 2) {
@@ -46,6 +52,9 @@ export default function CriarTime() {
         const response = await axios.get('http://localhost:8080/time', {
           withCredentials: true,
         });
+        if (response.status === 404) {
+          setTimes([]);
+        }
         setTimes(response.data);
       } catch {
         console.log('erro');
@@ -53,6 +62,39 @@ export default function CriarTime() {
     };
     buscarTimes();
   }, []);
+
+  useEffect(() => {
+    if (times.length == 2) {
+      buscarJogadoresRelacionadosAoTime();
+    }
+  }, [times]);
+
+  const buscarJogadoresRelacionadosAoTime = async () => {
+    try {
+      const promises = times.map((time) =>
+        axios.get(
+          'http://localhost:8080/jogador/buscarJogadoresRelacionadosAoTime',
+          {
+            params: { nomeTime: time.nomeTime },
+            withCredentials: true,
+          },
+        ),
+      );
+      const responses = await Promise.all(promises);
+
+      const jogadoresPorTime = responses.map((response, index) => ({
+        nomeTime: times[index].nomeTime,
+        jogadores: response.data,
+      }));
+      if (jogadoresPorTime != 0) {
+        setTimesComJogadores(jogadoresPorTime);
+        setEditar(true);
+      }
+      setTimesComJogadores([]);
+    } catch {
+      console.log('erro buscarJogadoresRelacionadosAoTime');
+    }
+  };
 
   const enviarTimes = async (e) => {
     e.preventDefault();
@@ -74,21 +116,57 @@ export default function CriarTime() {
     }
   };
 
-  useEffect(() => {
-    const buscarJogadores = async () => {
-      try {
-        const response = await axios
-          .get(
-            'http://localhost:8080/jogador/buscarJogadoresRelacionadosAoTime',
-            { param: { nomeTime: times[0].nomeTime }, withCredentials: true },
-          )
-          .then(setJogadores(response.data));
-      } catch {
-        console.log('erro');
-      }
-    };
-    if (times >= 1) buscarJogadores();
-  }, [jogadores]);
+  const editarTimes = () => {
+    console.log('Pode editar');
+  };
+
+  const getIcon = () => {
+    if (times.length < 2) {
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          className="icon-plus"
+        >
+          <path
+            d="M12 5v14M5 12h14"
+            stroke="black"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    }
+
+    if (editar) {
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="#fff"
+          className="size-6"
+        >
+          <path
+            fillRule="evenodd"
+            d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      );
+    }
+
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="size-6"
+      >
+        <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+      </svg>
+    );
+  };
 
   return (
     <main className="criar-time">
@@ -110,8 +188,33 @@ export default function CriarTime() {
         <span>times</span>
       </header>
       <div className="times">
-        {times.length >= 0 ? '' : <h4>Insira dois times para enviar:</h4>}
-        {times.length >= 0 ? (
+        {times.length <= 2 ? <h4>Insira dois times para enviar:</h4> : ''}
+        {times.length <= 2 ? (
+          <div className="dados-time">
+            <form>
+              <label htmlFor="">Time</label>
+              {times.map((time, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  value={time.nomeTime}
+                  name={`nome${index}`}
+                />
+              ))}
+            </form>
+            <form>
+              <label htmlFor="">Cor</label>
+              {times.map((time, index) => (
+                <input
+                  key={index}
+                  type="color"
+                  value={time.corReferencia}
+                  name={`cor${index}`}
+                />
+              ))}
+            </form>
+          </div>
+        ) : (
           <div className="dados-time">
             <form className="read-only">
               <label htmlFor="">Time</label>
@@ -120,6 +223,7 @@ export default function CriarTime() {
                   key={index}
                   readOnly
                   value={time.nomeTime}
+                  onChange={(e) => handleNomeTime(index, e.target.value)}
                   name={`nome${index}`}
                 />
               ))}
@@ -132,32 +236,6 @@ export default function CriarTime() {
                   type="color"
                   disabled
                   value={time.corReferencia}
-                  name={`cor${index}`}
-                />
-              ))}
-            </form>
-          </div>
-        ) : (
-          <div className="dados-time">
-            <form>
-              <label htmlFor="">Time</label>
-              {times.map((time, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  value={times.nomeTime}
-                  onChange={(e) => handleNomeTime(index, e.target.value)}
-                  name={`nome${index}`}
-                />
-              ))}
-            </form>
-            <form>
-              <label htmlFor="">Cor</label>
-              {times.map((time, index) => (
-                <input
-                  key={index}
-                  type="color"
-                  value={time.corReferencia}
                   onChange={(e) => handleCor(index, e.target.value)}
                   name={`cor${index}`}
                 />
@@ -169,45 +247,17 @@ export default function CriarTime() {
           <button
             type="button"
             className={`btn-add ${ativo ? 'ativo' : ''}`}
-            onClick={ativo ? enviarTimes : adicionarInput}
+            onClick={
+              ativo ? (editar ? editarTimes : enviarTimes) : adicionarInput
+            }
           >
-            {times.length === 2 ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="#fff"
-                className="size-6"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="icon-plus"
-              >
-                <path
-                  d="M12 5v14M5 12h14"
-                  stroke="black"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            )}
+            {getIcon()}
           </button>
         </div>
         <span>{mensagem}</span>
       </div>
       <div>
-        <ListarTimesComJogadores
-          nomeTime={times[0].nomeTime}
-          jogadores={jogadores}
-        />
+        <ListarTimesComJogadores timesComJogadores={timesComJogadores} />
       </div>
       <div className="botoes-escolha">
         <button>Escolher Times</button>

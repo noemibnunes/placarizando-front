@@ -64,8 +64,6 @@ export default function CriarTorneio() {
         </a>
       </div>
       <button onClick={() => navigate('/menu')}>Próximo</button>
-      <p>ou</p>
-      <a className="buscarTorneio" onClick={() => navigate('/modo-torneio')}>Buscar Torneio.</a>
     </main>
   );
 }

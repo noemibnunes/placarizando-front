@@ -50,13 +50,13 @@ h4 {
 
 .dados-time input[type="color"]{
   width: 6vh;
+  margin-bottom: 1.1vh;
 }
 
-.dados-time input,
-.dados-time input[type="color"] {
+.dados-time .read-only input,
+.dados-time .read-only input[type="color"] {
   background-color: #35526F;
   cursor: not-allowed;
-  margin-bottom: 1vh;
 }
 
 .read-only input:focus {

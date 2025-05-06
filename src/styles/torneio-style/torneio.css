@@ -95,11 +95,21 @@ p {
 
 .sucesso,
 .erro {
-  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: riseUp 0.4s forwards;
+  text-align: center;
 }
 
 .inserirCodigo input {
   margin-top: 4px;
+}
+
+@keyframes riseUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 

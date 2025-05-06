@@ -11,7 +11,7 @@ export default function Home() {
   };
 
   const navigateModoTorneio = async () => {
-    navigate('/criar-torneio');
+    navigate('/modo-torneio');
   };
 
   return (

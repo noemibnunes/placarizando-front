@@ -48,6 +48,7 @@ export default function ModoTorneio() {
       <h4>Insira o código para visualizar informações sobre seu torneio.</h4>
       <div className="inserirCodigo">
         <form onSubmit={validaTorneio}>
+          <span className={status}>{mensagem}</span>
           <label htmlFor="codigo">Código:</label>
           <input
             id="codigo"
@@ -59,7 +60,10 @@ export default function ModoTorneio() {
           <button type="submit">Próximo</button>
         </form>
       </div>
-      <span className={status}>{mensagem}</span>
+      <p>ou</p>
+      <a className="buscarTorneio" onClick={() => navigate('/criar-torneio')}>
+        Criar Torneio.
+      </a>
     </main>
   );
 }
