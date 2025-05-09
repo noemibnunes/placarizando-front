@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../styles/time-jogador-style/time-style.css';
 import axios from 'axios';
 import ListarTimesComJogadores from '../components/ListarTimesComJogadores';
+import Header from '../components/Header';
 
 export default function CriarTime() {
   const [times, setTimes] = useState([
@@ -170,23 +171,7 @@ export default function CriarTime() {
 
   return (
     <main className="criar-time">
-      <header className="app-bar">
-        <a href="">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-6"
-          >
-            <path
-              fillRule="evenodd"
-              d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </a>
-        <span>times</span>
-      </header>
+      <Header title={'times'}></Header>
       <div className="times">
         {times.length <= 2 ? <h4>Insira dois times para enviar:</h4> : ''}
         {times.length <= 2 ? (
