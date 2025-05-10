@@ -12,7 +12,6 @@ export default function CriarJogador() {
     {
       nomeJogador: '',
       nota: '',
-      novoJogador: true,
     },
   ]);
   const [mensagem, setMensagem] = useState('');
@@ -55,13 +54,9 @@ export default function CriarJogador() {
 
         const data = await response.json();
         if (Array.isArray(data) && data.length > 0) {
-          const jogadoresComFlag = data.map((jogador) => ({
-            ...jogador,
-            novoJogador: false,
-          }));
-          setJogadores(jogadoresComFlag);
+          setJogadores(data);
         } else {
-          setJogadores([{ nomeJogador: '', nota: '', novoJogador: true }]);
+          setJogadores([{}]);
         }
       } catch (error) {
         console.error('Erro ao buscar jogadores:', error.message);
