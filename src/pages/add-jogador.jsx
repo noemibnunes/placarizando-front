@@ -5,16 +5,19 @@ import deletar from '../assets/icon-delete.svg';
 import add from '../assets/icon-add.svg';
 import editar from '../assets/icon-edit.svg';
 import Header from '../components/Header';
+import ModalFeedback from '../components/ModalFeedback';
 
 export default function CriarJogador() {
   const [jogadores, setJogadores] = useState([
     {
       nomeJogador: '',
       nota: '',
+      novoJogador: true,
     },
   ]);
   const [mensagem, setMensagem] = useState('');
   const [time, setTime] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleChangeTime = (event) => {
     setTime(event.target.value);
@@ -52,9 +55,13 @@ export default function CriarJogador() {
 
         const data = await response.json();
         if (Array.isArray(data) && data.length > 0) {
-          setJogadores(data);
+          const jogadoresComFlag = data.map((jogador) => ({
+            ...jogador,
+            novoJogador: false,
+          }));
+          setJogadores(jogadoresComFlag);
         } else {
-          setJogadores([{}]);
+          setJogadores([{ nomeJogador: '', nota: '', novoJogador: true }]);
         }
       } catch (error) {
         console.error('Erro ao buscar jogadores:', error.message);
@@ -71,7 +78,10 @@ export default function CriarJogador() {
       .filter(
         (jogador) => jogador.novoJogador && jogador.nomeJogador?.trim() !== '',
       )
-      .map((jogador) => ({ nomeJogador: jogador.nomeJogador.trim() }));
+      .map((jogador) => ({
+        nomeJogador: jogador.nomeJogador.trim(),
+        nota: jogador.nota.trim(),
+      }));
 
     try {
       const response = await fetch(
@@ -90,11 +100,12 @@ export default function CriarJogador() {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Erro ao salvar jogadores.');
       } else {
+        setIsOpen(true);
         setMensagem('Jogadores salvos com sucesso!');
       }
 
       setTimeout(() => {
-        setMensagem('');
+        setIsOpen(false);
       }, 2000);
     } catch (error) {
       setTimeout(() => {
@@ -166,7 +177,12 @@ export default function CriarJogador() {
             <div className="btn-salvar">
               <button type="submit">Salvar</button>
             </div>
-            {mensagem && <span className="cliquei">{mensagem}</span>}
+            <ModalFeedback
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              mensagem={mensagem}
+            />
+            {/* {mensagem && <span className="cliquei">{mensagem}</span>} */}
           </div>
         </form>
       </div>

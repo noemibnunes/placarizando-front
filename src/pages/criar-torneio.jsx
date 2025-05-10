@@ -3,17 +3,17 @@ import placar from '../assets/placar.svg';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ModalFeedback from '../components/ModalFeedback';
 
 export default function CriarTorneio() {
   const [codigoUnico, setCodigoUnico] = useState();
   const [ativo, setAtivo] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const gerarCodigo = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/torneio', {
-          withCredentials: true,
-        });
+        const response = await axios.get('http://localhost:8080/torneio');
         setCodigoUnico(response.data);
       } catch {
         console.log('erro');
@@ -21,6 +21,27 @@ export default function CriarTorneio() {
     };
     gerarCodigo();
   }, []);
+
+  const criarTorneio = async () => {
+    setIsOpen(true);
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/torneio/criarTorneio',
+        { codigoTorneio: codigoUnico },
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (response.status === 201) {
+        setTimeout(() => {
+          navigate('/menu');
+        }, 2000);
+      }
+    } catch {
+      console.log('Ocorreu um erro inesperado!');
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -63,7 +84,12 @@ export default function CriarTorneio() {
           </svg>
         </a>
       </div>
-      <button onClick={() => navigate('/menu')}>Próximo</button>
+      <button onClick={criarTorneio}>Próximo</button>
+      <ModalFeedback
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        mensagem="Torneio criado!"
+      />
     </main>
   );
 }

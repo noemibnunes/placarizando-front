@@ -8,7 +8,7 @@ p {
   flex-direction: column;
   justify-content: center;  
   align-items: center;     
-  gap: 3vh;              
+  gap: 3vh;            
 }
 
 .cabecalho {
@@ -101,8 +101,22 @@ p {
   text-align: center;
 }
 
+.inserirCodigo form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh
+}
+
+.inserirCodigo label {
+  align-self: start;
+}
+
 .inserirCodigo input {
-  margin-top: 4px;
+  font-family: "Electrolize", sans-serif;
+  text-align: center;
+  width: 30vh;
+  font-size: 2.5vh;
 }
 
 @keyframes riseUp {

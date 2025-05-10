@@ -48,9 +48,19 @@ h4 {
   gap: 1vh;
 }
 
+.dados-time form {
+  display: flex;
+  flex-direction: column;
+}
+
+.dados-time input {
+  width: 35vh;
+  margin: 1vh 0;
+}
+
 .dados-time input[type="color"]{
   width: 6vh;
-  margin-bottom: 1.1vh;
+  margin: 1vh 0;
 }
 
 .dados-time .read-only input,
@@ -88,9 +98,14 @@ h4 {
 }
 
 .botoes-escolha button {
-width: 32vh;
+  width: 40vh;
 }
 
-.ativo  {
+.enviar  {
   background-color: #006400;
 }
+
+.editar svg, .enviar svg, .adicionar svg {
+  width: 20px;
+}
+
