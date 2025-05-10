@@ -12,8 +12,10 @@ export default function CriarJogador() {
     {
       nomeJogador: '',
       nota: '',
+      isNovo: true,
     },
   ]);
+
   const [mensagem, setMensagem] = useState('');
   const [time, setTime] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -23,59 +25,56 @@ export default function CriarJogador() {
   };
 
   const adicionarInput = () => {
-    setJogadores([
-      ...jogadores,
-      { nomeJogador: '', nota: '', novoJogador: true },
+    setJogadores((prev) => [
+      ...prev,
+      { nomeJogador: '', nota: '', isNovo: true },
     ]);
   };
 
   const handleChangeNome = (index, value) => {
-    const novosJogadores = [...jogadores];
-    novosJogadores[index].nomeJogador = value;
-    setJogadores(novosJogadores);
+    const atualizados = [...jogadores];
+    atualizados[index].nomeJogador = value;
+    setJogadores(atualizados);
   };
 
   const handleChangeNota = (index, value) => {
-    const novosJogadores = [...jogadores];
-    novosJogadores[index].nota = value;
-    setJogadores(novosJogadores);
+    const atualizados = [...jogadores];
+    atualizados[index].nota = value;
+    setJogadores(atualizados);
   };
 
   useEffect(() => {
-    async function buscarJogadores() {
-      try {
-        const response = await fetch(
-          `http://localhost:8080/jogador/buscarJogadores`,
-          {
-            credentials: 'include',
-          },
-        );
-        if (!response.ok) throw new Error('Erro ao buscar jogadores.');
-
-        const data = await response.json();
-        if (Array.isArray(data) && data.length > 0) {
-          setJogadores(data);
-        } else {
-          setJogadores([{}]);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar jogadores:', error.message);
-      }
-    }
-
     buscarJogadores();
   }, []);
+
+  const buscarJogadores = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/jogador/buscarJogadores`,
+        { credentials: 'include' },
+      );
+      if (!response.ok) throw new Error('Erro ao buscar jogadores.');
+
+      const data = await response.json();
+      const dataComFlag = data.map((jogador) => ({
+        ...jogador,
+        isNovo: false,
+      }));
+
+      setJogadores(dataComFlag);
+    } catch (error) {
+      console.error('Erro ao buscar jogadores:', error.message);
+    }
+  };
 
   const salvarJogadores = async (e) => {
     e.preventDefault();
 
     const jogadoresValidos = jogadores
-      .filter(
-        (jogador) => jogador.novoJogador && jogador.nomeJogador?.trim() !== '',
-      )
+      .filter((j) => j.isNovo && j.nomeJogador.trim() !== '')
       .map((jogador) => ({
         nomeJogador: jogador.nomeJogador.trim(),
-        nota: jogador.nota.trim(),
+        nota: jogador.nota?.trim() || '',
       }));
 
     try {
@@ -94,24 +93,44 @@ export default function CriarJogador() {
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Erro ao salvar jogadores.');
-      } else {
-        setIsOpen(true);
-        setMensagem('Jogadores salvos com sucesso!');
       }
 
+      setMensagem('Jogadores salvos com sucesso!');
+      setIsOpen(true);
       setTimeout(() => {
         setIsOpen(false);
-      }, 2000);
+      }, 1000);
+      buscarJogadores();
     } catch (error) {
+      setMensagem(error.message || 'Erro desconhecido.');
+      setIsOpen(true);
       setTimeout(() => {
-        setMensagem(error.message || 'Erro desconhecido.');
-      }, 2000);
+        setIsOpen(false);
+      }, 1000);
     }
   };
 
-  const deletarJogador = async (index, jogador) => {
-    if (!jogador.nomeJogador || jogador.nomeJogador.trim() === '') {
-      setJogadores(jogadores.filter((_, i) => i !== index));
+  const deletarJogador = async (e, idJogador) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/jogador/deletarJogador/${idJogador}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (!response.ok) throw new Error('Erro ao deletar jogador!');
+
+      setJogadores(
+        jogadores.filter((jogador) => jogador.idJogador !== idJogador),
+      );
+    } catch (error) {
+      console.error('Erro ao deletar jogador:', error.message);
     }
   };
 
@@ -121,7 +140,7 @@ export default function CriarJogador() {
       <div className="jogador-content">
         <div className="filtro-time">
           <label>Filtrar por time</label>
-          <div class="select-wrapper">
+          <div className="select-wrapper">
             <select name="select" onChange={handleChangeTime}>
               <option value="selecione">Selecione</option>
               <option>time1</option>
@@ -156,7 +175,7 @@ export default function CriarJogador() {
                 className="icon-delete"
                 src={deletar}
                 alt="Icon de deletar"
-                onClick={() => deletarJogador(index, jogador)}
+                onClick={(e) => deletarJogador(e, jogador.idJogador)}
               />
 
               <img className="icon-edit" src={editar} alt="Icon de editar" />
