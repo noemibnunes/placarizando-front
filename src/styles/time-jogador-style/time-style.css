@@ -48,6 +48,23 @@ h4 {
   gap: 1vh;
 }
 
+.listar-jogadores {
+  display: grid;
+  gap: 1vh;
+}
+
+.listar-jogadores input {
+  width: 42vh;
+}
+
+.listar-jogadores label {
+  margin-top: 4vh;
+}
+
+.listar-jogadores img {
+  width: 42vh;
+}
+
 .dados-time form {
   display: flex;
   flex-direction: column;
@@ -64,7 +81,8 @@ h4 {
 }
 
 .dados-time .read-only input,
-.dados-time .read-only input[type="color"] {
+.dados-time .read-only input[type="color"], 
+.listar-jogadores .read-only {
   background-color: #35526F;
   cursor: not-allowed;
 }

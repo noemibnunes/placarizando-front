@@ -3,11 +3,13 @@ import placar from '../assets/placar.svg';
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ModalFeedback from '../components/ModalFeedback';
 
 export default function ModoTorneio() {
   const [codigoTorneio, setCodigoTorneio] = useState('');
   const [mensagem, setMensagem] = useState('');
   const [status, setStatus] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -15,11 +17,13 @@ export default function ModoTorneio() {
     e.preventDefault();
 
     try {
+      setIsOpen(true);
       const response = await axios.post(
         'http://localhost:8080/torneio/buscarTorneio',
         { codigoTorneio: codigoTorneio },
         {
           withCredentials: true,
+          timeout: 1000,
         },
       );
 
@@ -34,8 +38,15 @@ export default function ModoTorneio() {
       if (error.status === 404) {
         setMensagem(error.response.data);
         setStatus('erro');
+        setTimeout(() => {
+          setIsOpen(false);
+        }, 2000);
+      } else {
+        setMensagem('Ocorreu um erro inesperado, tente novamente!');
+        setTimeout(() => {
+          setIsOpen(false);
+        }, 2000);
       }
-      console.log('erro');
     }
   };
 
@@ -48,7 +59,6 @@ export default function ModoTorneio() {
       <h4>Insira o código para visualizar informações sobre seu torneio.</h4>
       <div className="inserirCodigo">
         <form onSubmit={validaTorneio}>
-          <span className={status}>{mensagem}</span>
           <label htmlFor="codigo">Código:</label>
           <input
             id="codigo"
@@ -64,6 +74,7 @@ export default function ModoTorneio() {
       <a className="buscarTorneio" onClick={() => navigate('/criar-torneio')}>
         Criar Torneio.
       </a>
+      <ModalFeedback isOpen={isOpen} estado={status} mensagem={mensagem} />
     </main>
   );
 }

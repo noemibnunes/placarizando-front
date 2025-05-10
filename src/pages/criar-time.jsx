@@ -3,8 +3,16 @@ import '../styles/time-jogador-style/time-style.css';
 import axios from 'axios';
 import ListarTimesComJogadores from '../components/ListarTimesComJogadores';
 import Header from '../components/Header';
+import ModalFeedback from '../components/ModalFeedback';
 
 export default function CriarTime() {
+  const [mensagem, setMensagem] = useState('');
+  const [acao, setAcao] = useState('adicionar');
+  const [carregouTimes, setCarregouTimes] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [status, setStatus] = useState('');
+  const [timesCadastados, setTimesCadastrados] = useState(false);
+
   const [times, setTimes] = useState([
     {
       nomeTime: '',
@@ -19,14 +27,9 @@ export default function CriarTime() {
     },
   ]);
 
-  const [mensagem, setMensagem] = useState('');
-  const [acao, setAcao] = useState('adicionar');
-  const [carregouTimes, setCarregouTimes] = useState(false);
-
   const adicionarInput = () => {
     setAcao('enviar');
     setTimes([...times, { nomeTime: '', corReferencia: '#FFFFFF' }]);
-    console.log(acao);
   };
 
   const handleNomeTime = (index, value) => {
@@ -51,11 +54,15 @@ export default function CriarTime() {
         if (response.data.length === 0) {
           setAcao('adicionar');
         } else {
+          const timesReturn = response.data.map((jogador) => ({
+            ...jogador,
+          }));
+          setTimesCadastrados(timesReturn);
+          setTimesCadastrados(true);
           setTimes(response.data);
           setAcao('editar');
         }
       } catch {
-        console.log('erro');
         setAcao('adicionar');
       } finally {
         setCarregouTimes(true);
@@ -65,18 +72,18 @@ export default function CriarTime() {
   }, []);
 
   useEffect(() => {
-    if (times.length == 2) {
-      buscarJogadoresRelacionadosAoTime();
+    const todosTemId = times.length >= 2 && times.every((t) => t.idTime);
+    if (todosTemId) {
+      buscarJogadoresPorTime();
     }
   }, [times]);
 
-  const buscarJogadoresRelacionadosAoTime = async () => {
+  const buscarJogadoresPorTime = async () => {
     try {
       const promises = times.map((time) =>
         axios.get(
-          'http://localhost:8080/jogador/buscarJogadoresRelacionadosAoTime',
+          `http://localhost:8080/jogador/buscarJogadoresPorTime/${time.idTime}`,
           {
-            params: { nomeTime: time.nomeTime },
             withCredentials: true,
           },
         ),
@@ -87,16 +94,18 @@ export default function CriarTime() {
         nomeTime: times[index].nomeTime,
         jogadores: response.data,
       }));
-      if (jogadoresPorTime != 0) {
+      if (jogadoresPorTime.length > 0) {
         setTimesComJogadores(jogadoresPorTime);
+      } else {
+        setTimesComJogadores([{ nomeTime: '', jogadores: [] }]);
       }
-      setTimesComJogadores([]);
-    } catch {
-      console.log('erro buscarJogadoresRelacionadosAoTime');
+    } catch (error) {
+      setMensagem(error.response.data);
     }
   };
 
   const enviarTimes = async (e) => {
+    setIsOpen(true);
     e.preventDefault();
 
     try {
@@ -109,12 +118,20 @@ export default function CriarTime() {
       );
 
       if (response.status === 201) {
-        setMensagem('Times criados com sucesso!');
+        setMensagem(response.data);
         setAcao('editar');
-        setAtivo(true);
+        setStatus('sucesso');
+        setTimesCadastrados(true);
+        setTimeout(() => {
+          setIsOpen(false);
+        }, 2000);
       }
-    } catch {
-      console.log('erro');
+    } catch (error) {
+      setStatus('erro');
+      setMensagem(error.response.data);
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 2000);
     }
   };
 
@@ -194,8 +211,8 @@ export default function CriarTime() {
     <main className="criar-time">
       <Header title={'times'}></Header>
       <div className="times">
-        {times.length <= 2 ? <h4>Insira dois times para enviar:</h4> : ''}
-        {times.length <= 2 ? (
+        {!timesCadastados ? <h4>Insira dois times para enviar:</h4> : ''}
+        {!timesCadastados ? (
           <div className="dados-time">
             <form>
               <label htmlFor="">Time</label>
@@ -252,11 +269,11 @@ export default function CriarTime() {
           </div>
         )}
         <div className="btn-add-wrapper">{getButton()}</div>
-        <span>{mensagem}</span>
+        <div>
+          <ListarTimesComJogadores timesComJogadores={timesComJogadores} />
+        </div>
+        <ModalFeedback isOpen={isOpen} estado={status} mensagem={mensagem} />
       </div>
-      {/* <div>
-        <ListarTimesComJogadores timesComJogadores={timesComJogadores} />
-      </div> */}
       <div className="botoes-escolha">
         <button>Escolher Times</button>
         <button>Sortear Times</button>

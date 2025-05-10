@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/others-style/modal-style.css';
 
-export default function ModalFeedback({ isOpen, onClose, mensagem }) {
+export default function ModalFeedback({ isOpen, estado, mensagem }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
       setLoading(true);
-      const timeout = setTimeout(() => setLoading(false), 800);
+      const timeout = setTimeout(() => setLoading(false), 1000);
       return () => clearTimeout(timeout);
     }
   }, [isOpen]);
@@ -20,12 +20,14 @@ export default function ModalFeedback({ isOpen, onClose, mensagem }) {
         <div className="modal-icon">
           {loading ? (
             <div className="loader"></div>
-          ) : (
+          ) : estado === 'sucesso' ? (
             <div className="checkmark">✔</div>
+          ) : (
+            <div className="error">✖</div>
           )}
         </div>
 
-        <p className="modal-message">{mensagem}</p>
+        {loading ? 'Aguarde...' : <p className="modal-message">{mensagem}</p>}
       </div>
     </div>
   );

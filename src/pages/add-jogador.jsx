@@ -8,6 +8,11 @@ import Header from '../components/Header';
 import ModalFeedback from '../components/ModalFeedback';
 
 export default function CriarJogador() {
+  const [mensagem, setMensagem] = useState('');
+  const [time, setTime] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [status, setStatus] = useState('');
+
   const [jogadores, setJogadores] = useState([
     {
       nomeJogador: '',
@@ -15,10 +20,6 @@ export default function CriarJogador() {
       isNovo: true,
     },
   ]);
-
-  const [mensagem, setMensagem] = useState('');
-  const [time, setTime] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
 
   const handleChangeTime = (event) => {
     setTime(event.target.value);
@@ -78,6 +79,7 @@ export default function CriarJogador() {
       }));
 
     try {
+      setIsOpen(true);
       const response = await fetch(
         `http://localhost:8080/jogador/criarJogador`,
         {
@@ -91,22 +93,25 @@ export default function CriarJogador() {
       );
 
       if (!response.ok) {
+        setStatus('erro');
+        setMensagem('Erro ao salvar jogadores.');
         const errorData = await response.json();
         throw new Error(errorData.message || 'Erro ao salvar jogadores.');
       }
 
-      setMensagem('Jogadores salvos com sucesso!');
-      setIsOpen(true);
+      setMensagem('Jogador(es) salvo(s) com sucesso!');
+      setStatus('sucesso');
       setTimeout(() => {
         setIsOpen(false);
-      }, 1000);
+      }, 2000);
       buscarJogadores();
     } catch (error) {
+      setStatus('erro');
       setMensagem(error.message || 'Erro desconhecido.');
       setIsOpen(true);
       setTimeout(() => {
         setIsOpen(false);
-      }, 1000);
+      }, 2000);
     }
   };
 
@@ -193,7 +198,7 @@ export default function CriarJogador() {
             </div>
             <ModalFeedback
               isOpen={isOpen}
-              onClose={() => setIsOpen(false)}
+              estado={status}
               mensagem={mensagem}
             />
             {/* {mensagem && <span className="cliquei">{mensagem}</span>} */}

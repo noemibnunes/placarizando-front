@@ -9,6 +9,8 @@ export default function CriarTorneio() {
   const [codigoUnico, setCodigoUnico] = useState();
   const [ativo, setAtivo] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [status, setStatus] = useState('');
+  const [mensagem, setMensagem] = useState('');
 
   useEffect(() => {
     const gerarCodigo = async () => {
@@ -34,12 +36,15 @@ export default function CriarTorneio() {
       );
 
       if (response.status === 201) {
+        setStatus('sucesso');
+        setMensagem(response.data);
         setTimeout(() => {
           navigate('/menu');
         }, 2000);
       }
-    } catch {
-      console.log('Ocorreu um erro inesperado!');
+    } catch (error) {
+      setStatus('erro');
+      setMensagem(error.response.data);
     }
   };
 
@@ -85,11 +90,7 @@ export default function CriarTorneio() {
         </a>
       </div>
       <button onClick={criarTorneio}>Próximo</button>
-      <ModalFeedback
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        mensagem="Torneio criado!"
-      />
+      <ModalFeedback isOpen={isOpen} estado={status} mensagem={mensagem} />
     </main>
   );
 }
