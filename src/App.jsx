@@ -8,12 +8,14 @@ import AdicionarJogador from './pages/add-jogador';
 import CriarTorneio from './pages/criar-torneio';
 import ModoTorneio from './pages/modo-torneio';
 import Menu from './pages/menu';
+import Partidas from './pages/partidas';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/partidas" element={<Partidas />} />
         <Route path="/criar-time" element={<CriarTime />} />
         <Route path="/placar-partida" element={<PlacarPartida />} />
         <Route path="/add-jogador" element={<AdicionarJogador />} />

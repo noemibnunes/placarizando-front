@@ -1,18 +1,24 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function PlacarTime({ team, teamCount, handleClick, decreaseCount, sets }) {
-  const teamColor = team === 'left' ? '#f17d60' : '#00aad3';
-  const winnerColor = team === 'left' ? '#f17d60' : '#00aad3';
-  
+  const { state } = useLocation(); 
+
+  const infoTime = state ? state[team] : {}; 
+  const nomeTime = infoTime?.nome || (team === 'left' ? 'Casa' : 'Visitante');
+  const corTime = infoTime?.cor || (team === 'left' ? '#00aad3' : '#f17d60'); 
+  const corVencedor = corTime;
+
   return (
     <div className={`placar${team === 'left' ? '1' : '2'}`}>
       <div>
+        <h2>{nomeTime}</h2>
         <ul className="pontuacao">
           {sets.map((set) => (
             <li
               key={set.numero}
               style={{
-                backgroundColor: set.vencedor === team ? winnerColor : null,
+                backgroundColor: set.vencedor === team ? corVencedor : null,
               }}
             >
               <span>{set.numero + 'ºset'}</span>
@@ -22,7 +28,7 @@ export default function PlacarTime({ team, teamCount, handleClick, decreaseCount
         </ul>
         <div
           className="contar-pontos"
-          style={{ backgroundColor: teamColor }}
+          style={{ backgroundColor: corTime }}
           onClick={handleClick}
         >
           <button

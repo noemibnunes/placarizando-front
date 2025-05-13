@@ -15,7 +15,7 @@ export default function Menu() {
       </div>
       <button onClick={() => navigate('/add-jogador')}>Jogadores</button>
       <button onClick={() => navigate('/criar-time')}>Time</button>
-      <button>Partidas</button>
+      <button onClick={() => navigate('/partidas')}>Partidas</button>
     </main>
   );
 }
