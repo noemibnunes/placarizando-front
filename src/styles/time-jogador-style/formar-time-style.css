@@ -1,0 +1,61 @@
+.formar-time {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  justify-items: center;
+  margin-top: 4vh;
+}
+
+.linha-jogador {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.linha-jogador input {
+  width: 20vh;
+  flex: 1;
+}
+
+.linha-jogador select {
+  border: 1px solid red;
+  flex: 1;
+}
+
+
+.linha-jogador select {
+  appearance: none;       
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-size: 2.1vh;
+  width: 20vh;
+  height: 6vh;
+  background-color: #162E46;
+  color: #ffffff;
+  padding: 2vh;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+}
+
+.linha-jogador select:focus {
+  box-shadow: 0 0 0 2px #FCA914;
+}
+
+.time-select-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.time-select-wrapper::after {
+  content: '⏷'; 
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #fff;
+  font-size: 2vh;
+}

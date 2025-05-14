@@ -55,6 +55,7 @@ h4 {
 
 .listar-jogadores input {
   width: 42vh;
+  margin-bottom: 1vh;
 }
 
 .listar-jogadores label {

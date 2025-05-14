@@ -1,4 +1,3 @@
-import React from 'react';
 import '../styles/time-jogador-style/time-style.css';
 import noData from '../assets/no-data.svg';
 
@@ -15,7 +14,7 @@ export default function ListarTimesComJogadores({ timesComJogadores }) {
                   key={indexJogador}
                   disabled={true}
                   className="read-only"
-                  value={jogador}
+                  value={jogador.nomeJogador}
                   name={`jogador${indexJogador}`}
                 />
               ))

@@ -6,7 +6,6 @@ export default function Header({ title }) {
 
   const voltarPaginaAnterior = () => {
     navigate(-1);
-    console.log('entrou');
   };
 
   return (

@@ -9,6 +9,7 @@ import CriarTorneio from './pages/criar-torneio';
 import ModoTorneio from './pages/modo-torneio';
 import Menu from './pages/menu';
 import Partidas from './pages/partidas';
+import FormarTime from './pages/formar-time';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/modo-torneio" element={<ModoTorneio />} />
         <Route path="/criar-torneio" element={<CriarTorneio />} />
         <Route path="/menu" element={<Menu />} />
+        <Route path="/formar-time" element={<FormarTime />} />
       </Routes>
     </BrowserRouter>
   );

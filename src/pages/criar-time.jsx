@@ -4,6 +4,8 @@ import axios from 'axios';
 import ListarTimesComJogadores from '../components/ListarTimesComJogadores';
 import Header from '../components/Header';
 import ModalFeedback from '../components/ModalFeedback';
+import { useNavigate } from 'react-router-dom';
+import FormarTime from './formar-time';
 
 export default function CriarTime() {
   const [mensagem, setMensagem] = useState('');
@@ -11,7 +13,8 @@ export default function CriarTime() {
   const [carregouTimes, setCarregouTimes] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState('');
-  const [timesCadastados, setTimesCadastrados] = useState(false);
+  const [temTimesCadastrados, setTemTimesCadastrados] = useState(false);
+  const navigate = useNavigate();
 
   const [times, setTimes] = useState([
     {
@@ -53,15 +56,10 @@ export default function CriarTime() {
 
         if (response.data.length === 0) {
           setAcao('adicionar');
-        } else {
-          const timesReturn = response.data.map((jogador) => ({
-            ...jogador,
-          }));
-          setTimesCadastrados(timesReturn);
-          setTimesCadastrados(true);
-          setTimes(response.data);
-          setAcao('editar');
         }
+        setTemTimesCadastrados(true);
+        setTimes(response.data);
+        setAcao('desabilitar');
       } catch {
         setAcao('adicionar');
       } finally {
@@ -91,11 +89,13 @@ export default function CriarTime() {
       const responses = await Promise.all(promises);
 
       const jogadoresPorTime = responses.map((response, index) => ({
+        idTime: times[index].idTime,
         nomeTime: times[index].nomeTime,
         jogadores: response.data,
       }));
       if (jogadoresPorTime.length > 0) {
         setTimesComJogadores(jogadoresPorTime);
+        console.log(timesComJogadores);
       } else {
         setTimesComJogadores([{ nomeTime: '', jogadores: [] }]);
       }
@@ -119,9 +119,9 @@ export default function CriarTime() {
 
       if (response.status === 201) {
         setMensagem(response.data);
-        setAcao('editar');
+        setAcao('desabilitar');
         setStatus('sucesso');
-        setTimesCadastrados(true);
+        setTemTimesCadastrados(true);
         setTimeout(() => {
           setIsOpen(false);
         }, 2000);
@@ -135,8 +135,8 @@ export default function CriarTime() {
     }
   };
 
-  const editarTimes = () => {
-    console.log('Pode editar');
+  const formarTime = (times) => {
+    navigate('/formar-time', { state: { times } });
   };
 
   const getButton = () => {
@@ -168,6 +168,7 @@ export default function CriarTime() {
       return (
         <button
           type="button"
+          disabled={acao === 'desabilitar'}
           className={`btn-add ${acao}`}
           onClick={enviarTimes}
         >
@@ -186,33 +187,14 @@ export default function CriarTime() {
         </button>
       );
     }
-
-    if (acao === 'editar') {
-      return (
-        <button
-          type="button"
-          className={`btn-add ${acao}`}
-          onClick={editarTimes}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="size-6"
-          >
-            <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
-          </svg>
-        </button>
-      );
-    }
   };
 
   return (
     <main className="criar-time">
       <Header title={'times'}></Header>
       <div className="times">
-        {!timesCadastados ? <h4>Insira dois times para enviar:</h4> : ''}
-        {!timesCadastados ? (
+        {!temTimesCadastrados ? <h4>Insira dois times para enviar:</h4> : ''}
+        {!temTimesCadastrados ? (
           <div className="dados-time">
             <form>
               <label htmlFor="">Time</label>
@@ -270,14 +252,20 @@ export default function CriarTime() {
         )}
         <div className="btn-add-wrapper">{getButton()}</div>
         <div>
-          <ListarTimesComJogadores timesComJogadores={timesComJogadores} />
+          {timesComJogadores.length > 1 ? (
+            <ListarTimesComJogadores timesComJogadores={timesComJogadores} />
+          ) : null}
         </div>
         <ModalFeedback isOpen={isOpen} estado={status} mensagem={mensagem} />
       </div>
-      <div className="botoes-escolha">
-        <button>Escolher Times</button>
-        <button>Sortear Times</button>
-      </div>
+      {timesComJogadores.length >= 2 &&
+        timesComJogadores[0].jogadores.length < 6 &&
+        timesComJogadores[1].jogadores.length < 6 && (
+          <div className="botoes-escolha">
+            <button onClick={() => formarTime(times)}>Formar Time</button>
+            <button>Sortear Times</button>
+          </div>
+        )}
     </main>
   );
 }
