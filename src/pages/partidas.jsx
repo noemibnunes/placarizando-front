@@ -39,7 +39,6 @@ export default function Partidas() {
       right: { nome: times[1].nomeTime, cor: times[1].corReferencia },
     };
 
-    console.log(infoTimes)
     navigate('/placar-partida', { state: infoTimes });
 
   };

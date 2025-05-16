@@ -12,7 +12,6 @@ export default function PlacarTime({ team, teamCount, handleClick, decreaseCount
   return (
     <div className={`placar${team === 'left' ? '1' : '2'}`}>
       <div>
-        <h2>{nomeTime}</h2>
         <ul className="pontuacao">
           {sets.map((set) => (
             <li
@@ -31,6 +30,9 @@ export default function PlacarTime({ team, teamCount, handleClick, decreaseCount
           style={{ backgroundColor: corTime }}
           onClick={handleClick}
         >
+          <div className='nome-time'>
+            <h2>{nomeTime}</h2>
+          </div>
           <button
             onClick={(e) => {
               e.stopPropagation();
