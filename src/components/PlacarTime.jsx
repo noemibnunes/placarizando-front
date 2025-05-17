@@ -1,12 +1,18 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
-export default function PlacarTime({ team, teamCount, handleClick, decreaseCount, sets }) {
-  const { state } = useLocation(); 
+export default function PlacarTime({
+  team,
+  teamCount,
+  handleClick,
+  decreaseCount,
+  sets,
+}) {
+  const { state } = useLocation();
 
-  const infoTime = state ? state[team] : {}; 
+  const infoTime = state ? state[team] : {};
   const nomeTime = infoTime?.nome || (team === 'left' ? 'Casa' : 'Visitante');
-  const corTime = infoTime?.cor || (team === 'left' ? '#00aad3' : '#f17d60'); 
+  const corTime = infoTime?.cor || (team === 'left' ? '#00aad3' : '#f17d60');
   const corVencedor = corTime;
 
   return (
@@ -30,19 +36,19 @@ export default function PlacarTime({ team, teamCount, handleClick, decreaseCount
           style={{ backgroundColor: corTime }}
           onClick={handleClick}
         >
-          <div className='nome-time'>
-            <h2>{nomeTime}</h2>
+          <h2>{nomeTime}</h2>
+          <div className="linha-contador">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                decreaseCount();
+              }}
+              className="botao-flutuante"
+            >
+              &#x2212;
+            </button>
+            <span>{teamCount}</span>
           </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              decreaseCount();
-            }}
-            className="botao-flutuante"
-          >
-            &#x2212;
-          </button>
-          <span>{teamCount}</span>
         </div>
       </div>
     </div>

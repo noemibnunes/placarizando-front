@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import PlacarTime from "../components/PlacarTime";
-import "../styles/placar-partida-style/placar-partida-style.css";
-import logoPlacar from "../assets/placar.svg";
-import { useLocation } from "react-router-dom";
-import ModalFeedback from "../components/ModalFeedback";
+import React, { useEffect, useState } from 'react';
+import PlacarTime from '../components/PlacarTime';
+import '../styles/placar-partida-style/placar-partida-style.css';
+import logoPlacar from '../assets/placar.svg';
+import { useLocation } from 'react-router-dom';
+import ModalFeedback from '../components/ModalFeedback';
 
 export default function PlacarPartida() {
   const { state } = useLocation();
@@ -11,15 +11,58 @@ export default function PlacarPartida() {
   const [rightTeamCount, setRightTeamCount] = useState(0);
   const [sets, setSets] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [status, setStatus] = useState("");
-  const [mensagem, setMensagem] = useState("");
+  const [status, setStatus] = useState('');
+  const [mensagem, setMensagem] = useState('');
+  const [timeVencedor, setTimeVencedor] = useState([]);
+
+  useEffect(() => {
+    let vencedor = null;
+
+    if (
+      (leftTeamCount === 25 && leftTeamCount - rightTeamCount >= 2) ||
+      (leftTeamCount >= 24 &&
+        rightTeamCount >= 24 &&
+        leftTeamCount - rightTeamCount === 2)
+    ) {
+      vencedor = 'timeLeft';
+    }
+
+    if (
+      (rightTeamCount === 25 && rightTeamCount - leftTeamCount >= 2) ||
+      (rightTeamCount >= 24 &&
+        leftTeamCount >= 24 &&
+        rightTeamCount - leftTeamCount === 2)
+    ) {
+      vencedor = 'timeRight';
+    }
+
+    if (vencedor) {
+      setTimeVencedor((prev) => [...prev, vencedor]);
+    }
+  }, [leftTeamCount, rightTeamCount]);
+
+  useEffect(() => {
+    if (timeVencedor.length > sets.length) {
+      finalizarSet();
+    }
+  }, [timeVencedor]);
+
+  useEffect(() => {
+    const temVencedor = timeVencedor.some(
+      (item, index) => timeVencedor.indexOf(item) !== index,
+    );
+
+    if ((sets.length === 2 && temVencedor) || sets.length === 3) {
+      finalizarPartida();
+    }
+  }, [sets]);
 
   const finalizarSet = () => {
     const novoSet = {
       numero: sets.length + 1,
       leftScore: leftTeamCount,
       rightScore: rightTeamCount,
-      vencedor: leftTeamCount > rightTeamCount ? "left" : "right",
+      vencedor: leftTeamCount > rightTeamCount ? 'left' : 'right',
     };
 
     setSets([...sets, novoSet]);
@@ -56,7 +99,7 @@ export default function PlacarPartida() {
 
   const finalizarPartida = async () => {
     if (!ambosTimesPresentes) {
-      alert("Times não informados!");
+      alert('Times não informados!');
       return;
     }
 
@@ -78,34 +121,32 @@ export default function PlacarPartida() {
       setIsOpen(true);
 
       const response = await fetch(
-        `http://localhost:8080/partida/criarPartida?timeA=${encodeURIComponent(
-          infoLeft.nome
-        )}&timeB=${encodeURIComponent(infoRight.nome)}`,
+        `http://localhost:8080/partida/criarPartida/${infoLeft.idTime}/${infoRight.idTime}`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(partidaParaEnviar),
-          credentials: "include",
-        }
+          credentials: 'include',
+        },
       );
 
       if (!response.ok) {
-        setStatus("erro");
-        setMensagem("Erro ao finalizar partida.");
+        setStatus('erro');
+        setMensagem('Erro ao finalizar partida.');
         const errorData = await response.json();
-        throw new Error(errorData.message || "Erro ao finalizar partida.");
+        throw new Error(errorData.message || 'Erro ao finalizar partida.');
       }
 
-      setMensagem("Partida finalizada com sucesso!");
-      setStatus("sucesso");
+      setMensagem('Partida finalizada com sucesso!');
+      setStatus('sucesso');
       setTimeout(() => {
         setIsOpen(false);
       }, 2000);
     } catch (error) {
-      setStatus("erro");
-      setMensagem(error.message || "Erro desconhecido.");
+      setStatus('erro');
+      setMensagem(error.message || 'Erro desconhecido.');
       setIsOpen(true);
       setTimeout(() => {
         setIsOpen(false);
@@ -143,13 +184,6 @@ export default function PlacarPartida() {
           sets={sets}
         />
       </div>
-
-      <button onClick={finalizarSet}>Finalizar Set</button>
-      {ambosTimesPresentes && (
-        <button className="botao-finalizar" onClick={finalizarPartida}>
-          Finalizar Partida
-        </button>
-      )}
 
       <ModalFeedback isOpen={isOpen} estado={status} mensagem={mensagem} />
     </main>
