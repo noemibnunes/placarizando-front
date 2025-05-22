@@ -139,6 +139,30 @@ export default function CriarTime() {
     navigate('/formar-time', { state: { times } });
   };
 
+  const sortearTimes = async () => {
+    setIsOpen(true);
+
+    try {
+      const response = await axios.get(
+        'http://localhost:8080/time/sortearTimes',
+        {
+          withCredentials: true,
+        },
+      );
+
+      if (response.status === 200) {
+        setMensagem(response.data);
+        setStatus('sucesso');
+        setTimeout(() => {
+          setIsOpen(false);
+          buscarJogadoresPorTime();
+        }, 2000);
+      }
+    } catch (error) {
+      console.log(error.data);
+    }
+  };
+
   const getButton = () => {
     if (acao === 'adicionar') {
       return (
@@ -263,7 +287,7 @@ export default function CriarTime() {
         timesComJogadores[1].jogadores.length < 6 && (
           <div className="botoes-escolha">
             <button onClick={() => formarTime(times)}>Formar Time</button>
-            <button>Sortear Times</button>
+            <button onClick={() => sortearTimes()}>Sortear Times</button>
           </div>
         )}
     </main>
